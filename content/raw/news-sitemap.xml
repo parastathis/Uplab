@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="//uplab.gr/news-sitemap.xsl"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-news/0.9 http://www.google.com/schemas/sitemap-news/0.9/sitemap-news.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	<url>
+		<loc>https://uplab.gr/%CF%80%CF%81%CE%BF%CF%8A%CF%8C%CE%BD/%CE%B1%CE%BD%CE%B1%CF%80%CE%BD%CE%B5%CF%85%CF%83%CF%84%CE%B9%CE%BA%CF%8C/sinuforce-nasal-spray/</loc>
+		<xhtml:link rel="alternate" hreflang="el" href="https://uplab.gr/προϊόν/%ce%b1%ce%bd%ce%b1%cf%80%ce%bd%ce%b5%cf%85%cf%83%cf%84%ce%b9%ce%ba%cf%8c/sinuforce-nasal-spray/" />
+		<xhtml:link rel="alternate" hreflang="x-default" href="https://uplab.gr/προϊόν/%ce%b1%ce%bd%ce%b1%cf%80%ce%bd%ce%b5%cf%85%cf%83%cf%84%ce%b9%ce%ba%cf%8c/sinuforce-nasal-spray/" />
+		<news:news>
+			<news:publication>
+				<news:name>Τα νέα της Uplab Pharmaceuticals</news:name>
+				<news:language>el</news:language>
+			</news:publication>
+			<news:publication_date>2026-07-10T17:55:27+00:00</news:publication_date>
+			<news:title><![CDATA[Sinuforce nasal spray]]></news:title>
+		</news:news>
+	</url>
+</urlset>
