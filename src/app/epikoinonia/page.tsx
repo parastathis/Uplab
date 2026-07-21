@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import ContactForm from "@/components/contact/ContactForm";
+import ContactMap from "@/components/contact/ContactMap";
 
 export const metadata: Metadata = {
   title: "Επικοινωνία",
@@ -42,6 +43,8 @@ export default function ContactPage() {
 
         <ContactForm />
       </div>
+
+      <ContactMap />
     </div>
   );
 }

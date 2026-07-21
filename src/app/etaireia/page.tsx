@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { companyTabs, partners } from "@/lib/data";
 import PageHeader from "@/components/ui/PageHeader";
 import CompanyReader from "@/components/company/CompanyReader";
+import Timeline from "@/components/company/Timeline";
 
 export const metadata: Metadata = {
   title: "Η εταιρεία",
@@ -18,6 +19,8 @@ export default function CompanyPage() {
       <header className="mx-auto max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)]">
         <PageHeader kicker="Η εταιρεία" title="Φύση και επιστήμη, σε ισορροπία." />
       </header>
+
+      <Timeline />
 
       <CompanyReader tabs={tabs} partners={partners} />
     </div>

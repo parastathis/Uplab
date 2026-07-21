@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import createGlobe from "cobe";
+import createGlobe, { type COBEOptions } from "cobe";
+
+// cobe v2's shipped types dropped onRender (still supported at runtime).
+type RenderState = { phi: number; width: number; height: number };
+type GlobeOptions = COBEOptions & { onRender?: (state: RenderState) => void };
 
 /**
  * Interactive globe (cobe) marking the European houses Uplab represents
@@ -43,7 +47,7 @@ export default function PartnersGlobe() {
     onResize();
     window.addEventListener("resize", onResize);
 
-    const globe = createGlobe(canvas, {
+    const options: GlobeOptions = {
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
       width: width * 2,
       height: width * 2,
@@ -63,7 +67,8 @@ export default function PartnersGlobe() {
         state.width = width * 2;
         state.height = width * 2;
       },
-    });
+    };
+    const globe = createGlobe(canvas, options);
 
     const onDown = (e: PointerEvent) => {
       pointerDown = true;

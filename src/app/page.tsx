@@ -1,5 +1,6 @@
 import Hero from "@/components/home/Hero";
 import TrustStrip from "@/components/home/TrustStrip";
+import Manifesto from "@/components/home/Manifesto";
 import Pillars from "@/components/home/Pillars";
 import BalanceCompare from "@/components/home/BalanceCompare";
 import BodyMap from "@/components/home/BodyMap";
@@ -14,6 +15,7 @@ export default function HomePage() {
     <>
       <Hero />
       <TrustStrip />
+      <Manifesto />
       <Pillars />
       <BalanceCompare />
       <BodyMap />
