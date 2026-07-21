@@ -42,7 +42,7 @@ export default function Triptych() {
     <section className="bg-porcelain py-chapter" aria-label="Οι σειρές μας">
       <div className="mx-auto max-w-7xl px-[clamp(1.2rem,4vw,4.5rem)]">
         <p className="caption-tag">Μικρόκοσμοι</p>
-        <div className="mt-stanza grid grid-cols-1 gap-line md:grid-cols-3">
+        <div className="mt-stanza grid grid-cols-1 items-stretch gap-line md:grid-cols-3">
           {WORLDS.map((w, i) => (
             <motion.div
               key={w.slug}
@@ -50,12 +50,11 @@ export default function Triptych() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7, delay: i * 0.12, ease: [0.23, 1, 0.32, 1] }}
-              className={i === 1 ? "md:mt-verse" : ""}
+              className="h-full"
             >
               <Link
                 href={w.href}
-                className={`group block h-full overflow-hidden ${w.bg} p-stanza transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-2`}
-                style={{ borderRadius: i === 0 ? "2.6rem 0.5rem 2.6rem 0.5rem" : "0.5rem" }}
+                className={`group flex h-full min-h-[20rem] flex-col rounded-[6px] ${w.bg} p-stanza transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-2`}
               >
                 <p className={`caption-tag ${w.accent}`}>{w.kicker}</p>
                 <h3
@@ -64,9 +63,10 @@ export default function Triptych() {
                 >
                   {w.title}
                 </h3>
-                <p className="mt-line text-[0.92rem] leading-relaxed text-ink/70">{w.text}</p>
-                <span className="mt-stanza inline-block text-[0.82rem] text-ink underline decoration-transparent underline-offset-4 transition-colors duration-300 group-hover:decoration-current">
-                  Δείτε τη σειρά →
+                <p className="mt-line line-clamp-3 text-[0.92rem] leading-relaxed text-ink/70">{w.text}</p>
+                <span className="btn-line mt-auto pt-stanza text-[0.82rem] text-ink">
+                  Δείτε τη σειρά
+                  <span className="btn-arrow" aria-hidden>→</span>
                 </span>
               </Link>
             </motion.div>

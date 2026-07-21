@@ -1,3 +1,5 @@
+import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
+
 /** Shared long-form article shell for legal/quality/jobs pages. */
 export default function ProsePage({
   kicker,
@@ -13,18 +15,25 @@ export default function ProsePage({
   return (
     <div className="bg-porcelain pt-[calc(var(--nav-h)+2rem)]">
       <div className="mx-auto max-w-3xl px-[clamp(1.2rem,4vw,4.5rem)] pb-act">
-        <p className="caption-tag">{kicker}</p>
-        <h1 className="display-md mt-hair text-ink">{title}</h1>
+        <Reveal>
+          <p className="caption-tag">{kicker}</p>
+        </Reveal>
+        <Reveal delay={0.06}>
+          <h1 className="display-md mt-hair text-ink">{title}</h1>
+        </Reveal>
         {text && (
-          <div className="mt-verse space-y-line">
-            {text.split("\n").filter(Boolean).map((p, i) => (
-              <p key={i} className="text-[0.95rem] leading-[1.85] text-ink/80">
-                {p}
-              </p>
-            ))}
-          </div>
+          <Stagger className="mt-verse space-y-line" gap={0.04}>
+            {text
+              .split("\n")
+              .filter(Boolean)
+              .map((p, i) => (
+                <StaggerItem key={i}>
+                  <p className="text-[0.95rem] leading-[1.85] text-ink/80">{p}</p>
+                </StaggerItem>
+              ))}
+          </Stagger>
         )}
-        {children}
+        {children && <Reveal delay={0.1}>{children}</Reveal>}
       </div>
     </div>
   );

@@ -103,6 +103,7 @@ const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
 export default function BodyMap() {
   const [active, setActive] = useState<string | null>(null);
+  const [inview, setInview] = useState(false);
   const region = useMemo(() => bodyRegions.find((r) => r.id === active) ?? null, [active]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
@@ -173,6 +174,7 @@ export default function BodyMap() {
       raf = requestAnimationFrame(loop);
     };
     const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) setInview(true); // stagger the atlas labels in on scroll
       if (e.isIntersecting && !reduced && !running) {
         running = true;
         raf = requestAnimationFrame(loop);
@@ -180,7 +182,7 @@ export default function BodyMap() {
         running = false;
         cancelAnimationFrame(raf);
       }
-    }, { rootMargin: "80px" });
+    }, { rootMargin: "-12% 0px -12% 0px" });
     io.observe(section);
 
     // reduced motion: redraw only on state change
@@ -215,7 +217,7 @@ export default function BodyMap() {
             aria-hidden
           />
           <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} className="absolute inset-0 h-full w-full overflow-visible">
-            {bodyRegions.map((r) => {
+            {bodyRegions.map((r, i) => {
               const a = ANCHORS[r.id];
               if (!a) return null;
               const on = active === r.id;
@@ -228,6 +230,10 @@ export default function BodyMap() {
                   className="cursor-pointer"
                   onPointerEnter={() => setActive(r.id)}
                   onClick={() => setActive(r.id)}
+                  style={{
+                    opacity: inview ? 1 : 0,
+                    transition: `opacity 0.6s var(--ease-lab) ${0.15 + i * 0.09}s`,
+                  }}
                 >
                   <polyline
                     points={`${dotX},${a.y} ${a.side === "L" ? a.x - a.r - 3 : a.x + a.r + 3},${a.y} ${endX},${a.y}`}
@@ -301,7 +307,7 @@ export default function BodyMap() {
                     <span className="mr-breath text-[1.05rem] not-italic text-mist">{ANCHORS[region.id]?.n}</span>
                     {region.label}
                   </h3>
-                  <ul className="mt-line flex flex-wrap gap-breath">
+                  <ul className="mt-line flex flex-wrap gap-x-verse gap-y-line">
                     {region.categories.map((name) => {
                       const cat = categoryByName(name);
                       if (!cat || cat.count === 0) return null;
@@ -309,10 +315,10 @@ export default function BodyMap() {
                         <li key={name}>
                           <Link
                             href={`/proionta?katigoria=${encodeURIComponent(cat.slug)}`}
-                            className="group inline-flex items-baseline gap-[0.45em] rounded-full border border-parchment bg-porcelain px-[1.05em] py-[0.5em] text-[0.86rem] text-ink transition-colors duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-ink hover:bg-ink hover:text-porcelain"
+                            className="filter-tab"
                           >
                             {name}
-                            <span className="font-display italic text-mist group-hover:text-porcelain/70">{cat.count}</span>
+                            <span className="filter-tab__count">{cat.count}</span>
                           </Link>
                         </li>
                       );

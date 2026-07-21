@@ -1,6 +1,9 @@
 # dependencies
 /node_modules
 
+# stale pre-restructure leftover (old site/ subfolder, no longer part of the app)
+/site
+
 # next.js
 /.next/
 /out/

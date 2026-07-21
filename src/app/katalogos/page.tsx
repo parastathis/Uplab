@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ProsePage from "@/components/layout/ProsePage";
+import Magnetic from "@/components/ui/Magnetic";
 import { catalog } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -16,21 +17,25 @@ export default function CatalogPage() {
         κατηγορίες υγείας.
       </p>
       <div className="mt-stanza flex flex-wrap gap-breath">
-        <a
-          href={catalog.pdf}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-full bg-amber px-[1.6em] py-[0.7em] text-[0.88rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright"
-          style={{ fontWeight: 560 }}
-        >
-          Λήψη καταλόγου (PDF)
-        </a>
-        <Link
-          href="/proionta"
-          className="rounded-full border border-ink/20 px-[1.6em] py-[0.7em] text-[0.88rem] text-ink transition-colors duration-300 hover:bg-ink hover:text-porcelain"
-        >
-          Περιήγηση online
-        </Link>
+        <Magnetic strength={0.4}>
+          <a
+            href={catalog.pdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cta-sheen inline-block rounded-full bg-amber px-[1.6em] py-[0.7em] text-[0.88rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright"
+            style={{ fontWeight: 560 }}
+          >
+            Λήψη καταλόγου (PDF)
+          </a>
+        </Magnetic>
+        <Magnetic strength={0.3}>
+          <Link
+            href="/proionta"
+            className="inline-block rounded-full border border-ink/20 px-[1.6em] py-[0.7em] text-[0.88rem] text-ink transition-colors duration-300 hover:bg-ink hover:text-porcelain"
+          >
+            Περιήγηση online
+          </Link>
+        </Magnetic>
       </div>
     </ProsePage>
   );

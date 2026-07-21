@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { newProducts } from "@/lib/data";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,7 +14,7 @@ export default function NewProducts() {
   const ref = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const el = ref.current;
     const track = trackRef.current;
     if (!el || !track) return;
@@ -57,17 +58,14 @@ export default function NewProducts() {
           <h2 className="display-lg mt-hair text-ink">Νέα προϊόντα</h2>
         </div>
 
-        <div ref={trackRef} className="mt-verse flex w-max gap-[1.7rem] px-[clamp(1.2rem,4vw,4.5rem)] will-change-transform">
-          {newProducts.map((p, i) => (
+        <div ref={trackRef} className="mt-verse flex w-max gap-[1.5rem] px-[clamp(1.2rem,4vw,4.5rem)] will-change-transform">
+          {newProducts.map((p) => (
             <Link
               key={p.id}
               href={`/proionta/${p.slug}`}
               onMouseMove={tilt}
               onMouseLeave={untilt}
-              className={`group relative flex w-[min(19rem,72vw)] shrink-0 flex-col overflow-hidden border border-ink/10 bg-paper transition-transform duration-200 ease-out ${
-                i % 3 === 1 ? "mt-stanza" : i % 3 === 2 ? "-mt-breath" : ""
-              }`}
-              style={{ borderRadius: "0.4rem 1.9rem 0.4rem 0.4rem" }}
+              className="group relative flex w-[19rem] shrink-0 flex-col overflow-hidden rounded-[4px] border border-ink/10 bg-paper transition-transform duration-200 ease-out"
             >
               {p.image && (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -75,17 +73,16 @@ export default function NewProducts() {
                   src={p.image}
                   alt={p.imageAlt || p.name}
                   loading="lazy"
-                  className="aspect-square w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.045]"
+                  className="aspect-square w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.05]"
                 />
               )}
-              <div className="flex flex-col gap-hair p-line">
-                <h3 className="font-display text-[1.06rem] text-ink">
-                  {p.name}
-                </h3>
-                <p className="text-[0.78rem] text-mist">{p.categories.join(" · ")}</p>
+              {/* fixed-height text block so every card matches */}
+              <div className="flex min-h-[5rem] flex-col gap-hair border-t border-ink/8 p-line">
+                <h3 className="line-clamp-1 font-display text-[1.06rem] text-ink">{p.name}</h3>
+                <p className="line-clamp-1 text-[0.78rem] text-mist">{p.categories.join(" · ")}</p>
               </div>
               <span
-                className="absolute right-line top-line rounded-full bg-ink px-[0.8em] py-[0.3em] text-[0.68rem] tracking-wider text-porcelain opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="absolute right-line top-line rounded-[3px] bg-ink px-[0.7em] py-[0.3em] text-[0.62rem] tracking-[0.18em] text-porcelain opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 aria-hidden
               >
                 ΝΕΟ

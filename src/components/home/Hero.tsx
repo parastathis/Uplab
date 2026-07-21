@@ -1,95 +1,175 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const VISION =
   "Η απόλυτη φυσική ισορροπία ανθρώπου και περιβάλλοντος. Στοιχεία συνδεδεμένα, αμφίδρομα με την υγεία.";
 
+const FRAME_COUNT = 145;
+const framePath = (i: number) => `/media/hero-frames/f_${String(i).padStart(3, "0")}.jpg`;
+
 /**
- * Full-viewport hero: the camera orbits the hand holding the capsule,
- * scrubbed 1:1 by scroll. UPLAB tracks in letter-by-letter over the sky.
+ * Full-viewport hero. Instead of seeking a compressed MP4 on every scroll
+ * frame (which stutters), we preload a JPG frame-sequence and blit the nearest
+ * decoded frame to a <canvas> from a single rAF loop — the orbit scrubs glass-
+ * smooth. Frame target is eased toward, so fast flicks glide rather than snap.
  */
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [ready, setReady] = useState(false);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const section = sectionRef.current;
-    const video = videoRef.current;
-    if (!section || !video) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const canvas = canvasRef.current;
+    if (!section || !canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const ctx = gsap.context(() => {
-      // — video scrub: lerp toward target, seek only when meaningfully ahead —
-      const scrub = { target: 0, current: 0, lastSeek: -1 };
-      const onTick = () => {
-        scrub.current += (scrub.target - scrub.current) * 0.12;
-        if (Math.abs(scrub.current - scrub.lastSeek) > 1 / 30 && video.readyState >= 2) {
-          scrub.lastSeek = scrub.current;
-          video.currentTime = scrub.current;
-        }
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // ── preload frames ──
+    const images: HTMLImageElement[] = [];
+    let loaded = 0;
+    for (let i = 1; i <= FRAME_COUNT; i++) {
+      const img = new Image();
+      img.src = framePath(i);
+      img.onload = () => {
+        loaded++;
+        if (loaded === 1) drawCover(0); // first paint asap
+        if (loaded >= 8) setReady(true);
       };
-      gsap.ticker.add(onTick);
+      images.push(img);
+    }
 
-      const vh = window.innerHeight || document.documentElement.clientHeight || 800;
+    // ── canvas sizing (DPR-aware, cover fit) ──
+    let cw = 0,
+      ch = 0;
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = section.clientWidth;
+      ch = section.clientHeight;
+      canvas.width = Math.round(cw * dpr);
+      canvas.height = Math.round(ch * dpr);
+      canvas.style.width = `${cw}px`;
+      canvas.style.height = `${ch}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawCover(Math.round(state.frame));
+    };
 
-      // one master scrubbed timeline owns the pin — letter/copy tweens live
-      // inside it (separate triggers on a pinned element never progress)
+    function drawCover(idx: number) {
+      const img = images[Math.max(0, Math.min(FRAME_COUNT - 1, idx))];
+      if (!img || !img.complete || !img.naturalWidth) return;
+      const ir = img.naturalWidth / img.naturalHeight;
+      const cr = cw / ch;
+      let dw = cw,
+        dh = ch,
+        dx = 0,
+        dy = 0;
+      if (ir > cr) {
+        dh = ch;
+        dw = ch * ir;
+        dx = (cw - dw) / 2;
+      } else {
+        dw = cw;
+        dh = cw / ir;
+        dy = (ch - dh) / 2;
+      }
+      ctx!.clearRect(0, 0, cw, ch);
+      ctx!.drawImage(img, dx, dy, dw, dh);
+    }
+
+    const state = { frame: 0, drawn: -1 };
+
+    const ctxGsap = gsap.context(() => {
+      // one rAF: ease drawn frame toward target, blit only on change
+      const render = () => {
+        state.drawn += (state.frame - state.drawn) * 0.18;
+        const idx = Math.round(state.drawn);
+        drawCover(idx);
+      };
+      gsap.ticker.add(render);
+
+      resize();
+      window.addEventListener("resize", resize);
+
+      if (reduced) {
+        drawCover(0);
+        return () => {
+          gsap.ticker.remove(render);
+          window.removeEventListener("resize", resize);
+        };
+      }
+
+      const vh = window.innerHeight || 800;
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${vh * 3}`,
+          end: () => `+=${vh * 2.6}`,
           pin: true,
-          scrub: true,
+          scrub: 0.8,
           onUpdate: (self) => {
-            const dur = video.duration || 6;
-            scrub.target = self.progress * (dur - 0.05);
+            state.frame = self.progress * (FRAME_COUNT - 1);
           },
         },
       });
 
       tl.fromTo(
         section.querySelectorAll("[data-letter]"),
-        { yPercent: 118, opacity: 0 },
-        { yPercent: 0, opacity: 1, stagger: 0.055, ease: "power3.out", duration: 0.3 },
+        { yPercent: 120, opacity: 0 },
+        { yPercent: 0, opacity: 1, stagger: 0.05, ease: "power3.out", duration: 0.28 },
         0
       )
         .fromTo(
           section.querySelectorAll("[data-hero-copy]"),
-          { y: 42, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.06, ease: "power2.out", duration: 0.22 },
-          0.32
+          { y: 46, opacity: 0 },
+          { y: 0, opacity: 1, stagger: 0.08, ease: "power2.out", duration: 0.22 },
+          0.22
         )
-        .to({}, { duration: 0.46 }); // dead time: the orbit alone carries the rest
+        .to(
+          section.querySelector("[data-hero-scrollcue]"),
+          { opacity: 0, duration: 0.12 },
+          0.14
+        )
+        .to({}, { duration: 0.5 });
 
-      return () => gsap.ticker.remove(onTick);
+      return () => {
+        gsap.ticker.remove(render);
+        window.removeEventListener("resize", resize);
+      };
     }, section);
 
-    return () => ctx.revert();
+    return () => ctxGsap.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} aria-label="Uplab Pharmaceuticals" className="relative h-[100dvh] w-full overflow-hidden bg-sky">
-      <video
-        ref={videoRef}
-        muted
-        playsInline
-        preload="auto"
-        poster="/media/hero-still.png"
-        className="absolute inset-0 h-full w-full object-cover"
+    <section
+      ref={sectionRef}
+      aria-label="Uplab Pharmaceuticals"
+      className="relative h-[100dvh] w-full overflow-hidden bg-sky"
+    >
+      {/* poster underneath the canvas until frames decode — no flash of empty */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/media/hero-still.png"
+        alt=""
         aria-hidden
-      >
-        <source src="/media/hero-orbit.mp4" type="video/mp4" />
-      </video>
+        className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+          ready ? "opacity-0" : "opacity-100"
+        }`}
+      />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden />
 
-      {/* ink veil for legibility at the top edge */}
-      <div className="absolute inset-x-0 top-0 h-[30vh] bg-gradient-to-b from-ink/35 to-transparent" aria-hidden />
+      {/* ink veils for legibility */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[32vh] bg-gradient-to-b from-ink/45 to-transparent" aria-hidden />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[38vh] bg-gradient-to-t from-ink/55 to-transparent" aria-hidden />
 
       <div className="relative z-10 flex h-full flex-col justify-between px-[clamp(1.2rem,4vw,4.5rem)] pb-verse pt-[calc(var(--nav-h)+2rem)]">
         <h1 className="display-xl mt-[4vh] flex overflow-hidden text-porcelain" aria-label="UPLAB">
@@ -100,7 +180,7 @@ export default function Hero() {
           ))}
         </h1>
 
-        <div className="mb-[6vh] flex flex-wrap items-end justify-between gap-stanza">
+        <div className="mb-[5vh] flex flex-wrap items-end justify-between gap-stanza">
           <p
             data-hero-copy
             className="max-w-[26ch] font-display text-[clamp(1.05rem,1.9vw,1.5rem)] italic leading-snug text-porcelain/90"
@@ -110,15 +190,24 @@ export default function Hero() {
           <Link
             data-hero-copy
             href="/simeia-polisis"
-            className="group inline-flex items-center gap-breath rounded-full bg-amber px-[1.6em] py-[0.75em] text-[0.85rem] text-ink-black transition-colors duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-amber-bright"
-            style={{ fontWeight: 560 }}
+            className="btn-line group text-porcelain"
           >
-            Βρείτε φαρμακείο
-            <span className="inline-block transition-transform duration-500 group-hover:translate-x-1" aria-hidden>
-              →
-            </span>
+            <span>Βρείτε φαρμακείο</span>
+            <span className="btn-line__arrow" aria-hidden>→</span>
           </Link>
         </div>
+      </div>
+
+      {/* scroll cue */}
+      <div
+        data-hero-scrollcue
+        className="pointer-events-none absolute bottom-verse left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-porcelain/70"
+        aria-hidden
+      >
+        <span className="caption-tag !text-porcelain/60 !text-[0.62rem]">Κυλήστε</span>
+        <span className="h-9 w-px bg-porcelain/40">
+          <span className="block h-3 w-px animate-hero-cue bg-porcelain" />
+        </span>
       </div>
     </section>
   );

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { productsEn } from "@/lib/data";
+import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
+import Magnetic from "@/components/ui/Magnetic";
 
 export function generateStaticParams() {
   return productsEn.map((p) => ({ slug: p.slug }));
@@ -19,11 +21,14 @@ export default async function EnProductPage({ params }: { params: Promise<{ slug
   const product = productsEn.find((p) => p.slug === slug);
   if (!product) notFound();
 
+  const excerptBlocks = product.excerpt.split("\n").filter(Boolean);
+  const descBlocks = product.description.split("\n").filter(Boolean);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.excerpt.split("\n")[0],
+    description: excerptBlocks[0],
     image: product.image ?? undefined,
     brand: { "@type": "Brand", name: "Uplab Pharmaceuticals" },
   };
@@ -33,37 +38,47 @@ export default async function EnProductPage({ params }: { params: Promise<{ slug
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="mx-auto max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)]">
         <nav aria-label="Breadcrumb" className="text-[0.78rem] text-mist">
-          <Link href="/en" className="hover:text-slate">Home</Link>
+          <Link href="/en" className="link-underline hover:text-slate">Home</Link>
           <span aria-hidden> / </span>
-          <Link href="/en/products" className="hover:text-slate">Products</Link>
+          <Link href="/en/products" className="link-underline hover:text-slate">Products</Link>
         </nav>
 
         <div className="mt-verse grid grid-cols-1 gap-chapter lg:grid-cols-[0.85fr_1.15fr]">
           <div>
-            <div className="sticky top-[calc(var(--nav-h)+1rem)] overflow-hidden border border-ink/8 bg-white" style={{ borderRadius: "0.4rem 2.2rem 0.4rem 0.4rem" }}>
+            <Reveal
+              blur
+              className="group sticky top-[calc(var(--nav-h)+1rem)] overflow-hidden border border-ink/8 bg-white"
+              style={{ borderRadius: "0.4rem 2.2rem 0.4rem 0.4rem" }}
+            >
               {product.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={product.image} alt={product.imageAlt || product.name} className="w-full object-cover" />
+                <img src={product.image} alt={product.imageAlt || product.name} className="w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-[1.05]" />
               ) : (
                 <div className="flex aspect-square items-center justify-center bg-bone font-display text-[3rem] italic text-sage">U</div>
               )}
-            </div>
+            </Reveal>
           </div>
           <div className="pb-act">
-            <h1 className="display-lg text-ink">{product.name}</h1>
+            <Reveal>
+              <h1 className="display-lg text-ink">{product.name}</h1>
+            </Reveal>
             <div className="mt-stanza space-y-line">
-              {product.excerpt.split("\n").filter(Boolean).map((b, i) => (
-                <p key={i} className={i === 0 ? "max-w-[58ch] font-display text-[clamp(1rem,1.5vw,1.2rem)] leading-relaxed text-ink/85" : "max-w-[58ch] text-[0.95rem] leading-relaxed text-mist"}>
-                  {b}
-                </p>
+              {excerptBlocks.map((b, i) => (
+                <Reveal key={i} delay={0.06 + i * 0.04}>
+                  <p className={i === 0 ? "max-w-[58ch] font-display text-[clamp(1rem,1.5vw,1.2rem)] leading-relaxed text-ink/85" : "max-w-[58ch] text-[0.95rem] leading-relaxed text-mist"}>
+                    {b}
+                  </p>
+                </Reveal>
               ))}
             </div>
             <hr className="my-chapter border-ink/10" />
-            <div className="space-y-line">
-              {product.description.split("\n").filter(Boolean).map((b, i) => (
-                <p key={i} className="max-w-[62ch] text-[0.95rem] leading-relaxed text-ink/75">{b}</p>
+            <Stagger className="space-y-line" gap={0.08}>
+              {descBlocks.map((b, i) => (
+                <StaggerItem key={i}>
+                  <p className="max-w-[62ch] text-[0.95rem] leading-relaxed text-ink/75">{b}</p>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </div>
         </div>
       </div>
@@ -73,9 +88,11 @@ export default async function EnProductPage({ params }: { params: Promise<{ slug
           <p className="text-[0.85rem] text-mist">
             Available exclusively <span className="text-ink">through pharmacies</span>
           </p>
-          <Link href="/simeia-polisis" className="shrink-0 rounded-full bg-amber px-[1.5em] py-[0.65em] text-[0.85rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright" style={{ fontWeight: 560 }}>
-            Where to find it
-          </Link>
+          <Magnetic strength={0.4}>
+            <Link href="/simeia-polisis" className="cta-sheen inline-block shrink-0 rounded-full bg-amber px-[1.5em] py-[0.65em] text-[0.85rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright" style={{ fontWeight: 560 }}>
+              Where to find it
+            </Link>
+          </Magnetic>
         </div>
       </div>
     </article>
