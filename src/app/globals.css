@@ -1,0 +1,262 @@
+@import "tailwindcss";
+
+/* ————— Self-hosted fonts (Greek + Latin, unicode-range subsets) —————
+   GFS Didot — Greek Font Society (Κατσουλίδης/Ματθιόπουλος, 1994· τα στοιχεία του Κοραή, 1805). OFL.
+   GFS Didot Display — υπέρμαυρη τίτλων εφημερίδων '50 (Τριανταφυλλάκος). Caps-only Latin. OFL.
+   Sofia Sans — Lettersoup (Nikoltchev/Petrova), variable wght 1–1000. OFL. */
+@font-face {
+  font-family: "GFS Didot";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/didot-regular-greek.woff2") format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/didot-regular-greek-ext.woff2") format("woff2");
+  unicode-range: U+1F00-1FFF;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/didot-regular-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/didot-italic-greek.woff2") format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/didot-italic-greek-ext.woff2") format("woff2");
+  unicode-range: U+1F00-1FFF;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/didot-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/didot-bold-greek.woff2") format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/didot-bold-greek-ext.woff2") format("woff2");
+  unicode-range: U+1F00-1FFF;
+}
+@font-face {
+  font-family: "GFS Didot";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/didot-bold-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122;
+}
+@font-face {
+  font-family: "GFS Didot Display";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/didot-display-black-greek.woff2") format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: "GFS Didot Display";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/didot-display-black-greek-ext.woff2") format("woff2");
+  unicode-range: U+1F00-1FFF;
+}
+@font-face {
+  font-family: "GFS Didot Display";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/didot-display-black-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF;
+}
+@font-face {
+  font-family: "Sofia Sans";
+  font-style: normal;
+  font-weight: 1 1000;
+  font-display: swap;
+  src: url("/fonts/sofiasans-normal-greek.woff2") format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: "Sofia Sans";
+  font-style: normal;
+  font-weight: 1 1000;
+  font-display: swap;
+  src: url("/fonts/sofiasans-normal-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20C0;
+}
+@font-face {
+  font-family: "Sofia Sans";
+  font-style: normal;
+  font-weight: 1 1000;
+  font-display: swap;
+  src: url("/fonts/sofiasans-normal-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Sofia Sans";
+  font-style: italic;
+  font-weight: 1 1000;
+  font-display: swap;
+  src: url("/fonts/sofiasans-italic-greek.woff2") format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: "Sofia Sans";
+  font-style: italic;
+  font-weight: 1 1000;
+  font-display: swap;
+  src: url("/fonts/sofiasans-italic-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122;
+}
+
+/* ————— Design tokens: «Η Ισορροπία» v2 —————
+   Νόμοι της παλέτας:
+   1. Το μέλι (amber) είναι πρόθεση — ΜΟΝΟ κύριο CTA, ενεργός χάρτης σώματος,
+      υποβολή φόρμας, ::selection. Ποτέ σε captions, links, hovers, icons, chips.
+   2. Η δομή είναι μελάνι — eyebrows/labels = slate, muted = mist,
+      δεύτερη φωνή έμφασης = πλάγια Didot, όχι χρώμα.
+   3. Η πορσελάνη αναπνέει σε 4 τόνους (paper→porcelain→bone→parchment)·
+      sage-veil μόνο στα κεφάλαια της φύσης· σκοτεινά κεφάλαια σε night, όχι μαύρο. */
+@theme {
+  /* neutrals — porcelain family */
+  --color-paper: #fcfbf8;
+  --color-porcelain: #f5f2eb;
+  --color-bone: #ece6da;
+  --color-parchment: #dfd7c6;
+  --color-sage-veil: #e9ece5;
+  --color-sage: #8f9c8b;
+  --color-sage-ink: #47524a; /* contrast-safe text on sage tints */
+
+  /* ink family — carries the structure */
+  --color-ink-black: #0f1922;
+  --color-ink: #1c2b3a;
+  --color-slate: #43566a;
+  --color-mist: #596871; /* AA on porcelain (5.2) and bone (4.6) */
+  --color-night: #16222e;
+  --color-night-soft: #22323f;
+  --color-sky: #274b78; /* the hero's cobalt, graded toward ink */
+
+  /* amber — the single accent, strictly rationed */
+  --color-amber: #c9803e;
+  --color-amber-bright: #e9a45c; /* on night fields */
+  --color-amber-deep: #8a5a2e; /* text-safe amber on porcelain */
+
+  --font-display: "GFS Didot", "Didot", Georgia, serif;
+  --font-display-black: "GFS Didot Display", "GFS Didot", Georgia, serif;
+  --font-body: "Sofia Sans", "Segoe UI", system-ui, sans-serif;
+
+  /* Irregular spacing scale tied to the typographic scale — deliberately not 4/8/16/24 */
+  --spacing-hair: 0.3rem;
+  --spacing-breath: 0.85rem;
+  --spacing-line: 1.35rem;
+  --spacing-stanza: 2.2rem;
+  --spacing-verse: 3.7rem;
+  --spacing-chapter: 6.1rem;
+  --spacing-act: 9.9rem;
+
+  --ease-lab: cubic-bezier(0.23, 1, 0.32, 1); /* laboratory-calm */
+  --ease-pour: cubic-bezier(0.65, 0, 0.15, 1); /* honey pour */
+}
+
+:root {
+  --nav-h: 4.6rem;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis owns scrolling */
+}
+
+body {
+  background: var(--color-porcelain);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-weight: 390;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-paper);
+}
+
+/* Display type helpers — GFS Didot: hairline serifs want size, not squeeze */
+.display-xl {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 10.5vw, 9.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.012em;
+}
+.display-lg {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.1rem, 5.4vw, 4.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.008em;
+}
+.display-md {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.45rem, 2.9vw, 2.3rem);
+  line-height: 1.14;
+  letter-spacing: -0.004em;
+}
+/* the three pillars only — 1950s newspaper black */
+.display-black {
+  font-family: var(--font-display-black);
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.caption-tag {
+  font-family: var(--font-body);
+  font-weight: 620;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-slate);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

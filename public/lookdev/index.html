@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Uplab — Art Direction v2 · «Η Ισορροπία»</title>
+<style>
+/* ————— fonts: GFS Didot (Greek Font Society, OFL) + Sofia Sans (Lettersoup, OFL) ————— */
+@font-face{font-family:"GFS Didot";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/didot-regular-greek.woff2") format("woff2");unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:"GFS Didot";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/didot-regular-greek-ext.woff2") format("woff2");unicode-range:U+1F00-1FFF}
+@font-face{font-family:"GFS Didot";font-style:normal;font-weight:400;font-display:swap;src:url("/fonts/didot-regular-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
+@font-face{font-family:"GFS Didot";font-style:italic;font-weight:400;font-display:swap;src:url("/fonts/didot-italic-greek.woff2") format("woff2");unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:"GFS Didot";font-style:italic;font-weight:400;font-display:swap;src:url("/fonts/didot-italic-greek-ext.woff2") format("woff2");unicode-range:U+1F00-1FFF}
+@font-face{font-family:"GFS Didot";font-style:italic;font-weight:400;font-display:swap;src:url("/fonts/didot-italic-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
+@font-face{font-family:"GFS Didot";font-style:normal;font-weight:700;font-display:swap;src:url("/fonts/didot-bold-greek.woff2") format("woff2");unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:"GFS Didot";font-style:normal;font-weight:700;font-display:swap;src:url("/fonts/didot-bold-greek-ext.woff2") format("woff2");unicode-range:U+1F00-1FFF}
+@font-face{font-family:"GFS Didot";font-style:normal;font-weight:700;font-display:swap;src:url("/fonts/didot-bold-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
+@font-face{font-family:"GFS Didot Display";font-style:normal;font-weight:900;font-display:swap;src:url("/fonts/didot-display-black-greek.woff2") format("woff2");unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:"GFS Didot Display";font-style:normal;font-weight:900;font-display:swap;src:url("/fonts/didot-display-black-greek-ext.woff2") format("woff2");unicode-range:U+1F00-1FFF}
+@font-face{font-family:"GFS Didot Display";font-style:normal;font-weight:900;font-display:swap;src:url("/fonts/didot-display-black-latin.woff2") format("woff2");unicode-range:U+0000-00FF}
+@font-face{font-family:"Sofia Sans";font-style:normal;font-weight:1 1000;font-display:swap;src:url("/fonts/sofiasans-normal-greek.woff2") format("woff2");unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:"Sofia Sans";font-style:normal;font-weight:1 1000;font-display:swap;src:url("/fonts/sofiasans-normal-latin-ext.woff2") format("woff2");unicode-range:U+0100-024F,U+1E00-1EFF}
+@font-face{font-family:"Sofia Sans";font-style:normal;font-weight:1 1000;font-display:swap;src:url("/fonts/sofiasans-normal-latin.woff2") format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122}
+@font-face{font-family:"Sofia Sans";font-style:italic;font-weight:1 1000;font-display:swap;src:url("/fonts/sofiasans-italic-greek.woff2") format("woff2");unicode-range:U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF}
+@font-face{font-family:"Sofia Sans";font-style:italic;font-weight:1 1000;font-display:swap;src:url("/fonts/sofiasans-italic-latin.woff2") format("woff2");unicode-range:U+0000-00FF}
+
+/* ————— palette «Η Ισορροπία» v2 ————— */
+:root{
+  --paper:#FCFBF8; --porcelain:#F5F2EB; --bone:#ECE6DA; --parchment:#DFD7C6;
+  --sage-veil:#E9ECE5; --sage:#8F9C8B; --sage-ink:#47524A;
+  --ink-black:#0F1922; --ink:#1C2B3A; --slate:#43566A; --mist:#66757E;
+  --night:#16222E; --night-soft:#22323F;
+  --amber:#C9803E; --amber-bright:#E9A45C; --amber-deep:#8A5A2E;
+  --didot:"GFS Didot",Georgia,serif; --didot-black:"GFS Didot Display","GFS Didot",serif;
+  --sans:"Sofia Sans",system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+::selection{background:var(--amber);color:var(--paper)}
+body{background:var(--porcelain);color:var(--ink);font-family:var(--sans);font-weight:390;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:76rem;margin:0 auto;padding:0 clamp(1.2rem,4vw,4rem)}
+.eyebrow{font-size:.72rem;font-weight:620;letter-spacing:.24em;text-transform:uppercase;color:var(--slate)}
+.rule{border:none;border-top:1px solid var(--parchment);margin:0}
+
+/* masthead */
+header{padding:5rem 0 4rem}
+h1.hero{font-family:var(--didot);font-weight:400;font-size:clamp(2.8rem,7.5vw,6.4rem);line-height:1.02;letter-spacing:-.01em;margin-top:1.1rem;max-width:16ch}
+h1 .it{font-style:italic}
+.hero-sub{margin-top:1.6rem;max-width:44ch;color:var(--mist);font-size:1.02rem}
+
+section{padding:4.5rem 0}
+.sec-head{display:flex;align-items:baseline;gap:1.2rem;margin-bottom:2.6rem}
+.sec-num{font-family:var(--didot);font-style:italic;font-size:1.4rem;color:var(--mist)}
+h2{font-family:var(--didot);font-weight:400;font-size:clamp(1.7rem,3.4vw,2.6rem);letter-spacing:-.01em}
+
+/* ————— palette board ————— */
+.ramp-label{font-size:.72rem;font-weight:620;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);margin:1.8rem 0 .6rem}
+.ramp{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--parchment);border-radius:.4rem;overflow:hidden}
+.sw{height:6.2rem;display:flex;flex-direction:column;justify-content:flex-end;padding:.6rem .7rem;font-size:.68rem;letter-spacing:.04em}
+.sw b{font-weight:640;display:block}
+.sw span{opacity:.72}
+.prop{margin-top:2.6rem}
+.prop-bar{display:flex;height:2.1rem;border-radius:.35rem;overflow:hidden;border:1px solid var(--parchment)}
+.prop-bar div{height:100%}
+.prop-cap{display:flex;justify-content:space-between;font-size:.75rem;color:var(--mist);margin-top:.5rem}
+.laws{margin-top:2.8rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--parchment);border:1px solid var(--parchment);border-radius:.4rem;overflow:hidden}
+.law{background:var(--paper);padding:1.3rem 1.4rem}
+.law h4{font-family:var(--didot);font-style:italic;font-weight:400;font-size:1.05rem;margin-bottom:.45rem}
+.law p{font-size:.85rem;color:var(--mist);line-height:1.55}
+.law p em{font-style:normal;color:var(--ink);font-weight:520}
+
+/* ————— type board ————— */
+.spec{border-top:1px solid var(--parchment);padding:2.4rem 0}
+.spec-meta{font-size:.72rem;font-weight:620;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);margin-bottom:1.1rem}
+.sp-didot-xl{font-family:var(--didot);font-weight:400;font-size:clamp(2.6rem,7vw,5.8rem);line-height:1.04;letter-spacing:-.008em}
+.sp-didot-it{font-family:var(--didot);font-style:italic;font-weight:400;font-size:clamp(1.5rem,3.4vw,2.5rem);color:var(--slate);margin-top:.9rem}
+.sp-black{font-family:var(--didot-black);font-weight:900;font-size:clamp(2.4rem,6.4vw,5.2rem);line-height:1;letter-spacing:.01em}
+.sp-black small{display:block;font-family:var(--sans);font-weight:420;font-size:.9rem;letter-spacing:0;color:var(--mist);margin-top:.8rem;text-transform:none}
+.sp-sofia p{max-width:58ch;font-size:1.02rem}
+.sp-sofia .caps{margin-top:1.4rem;font-size:.78rem;font-weight:640;letter-spacing:.26em;text-transform:uppercase;color:var(--slate)}
+.btn-row{display:flex;gap:.9rem;margin-top:1.6rem;flex-wrap:wrap}
+.btn{font-family:var(--sans);font-size:.86rem;font-weight:600;letter-spacing:.04em;padding:.78em 1.7em;border-radius:999px;border:1px solid transparent;cursor:pointer}
+.btn-amber{background:var(--amber);color:var(--ink-black)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.glyphs{margin-top:1.6rem;font-family:var(--didot);font-size:1.35rem;line-height:1.9;color:var(--slate);max-width:44ch;word-break:break-all}
+
+/* ————— body map ————— */
+.bm-stage{background:var(--paper);border:1px solid var(--parchment);border-radius:.6rem;padding:clamp(1.4rem,3.5vw,3.2rem);display:grid;grid-template-columns:minmax(0,30rem) 1fr;gap:clamp(1.6rem,4vw,4rem);align-items:center}
+@media(max-width:56rem){.bm-stage{grid-template-columns:1fr}}
+.bm-fig{position:relative;margin:0 auto;width:100%;max-width:27rem;user-select:none}
+.bm-fig canvas{display:block;width:100%;height:auto}
+.bm-fig svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.bm-lab{font-family:var(--sans);font-size:.6rem;font-weight:620;letter-spacing:.14em;text-transform:uppercase;fill:var(--mist);cursor:pointer;transition:fill .3s}
+.bm-num{font-family:var(--didot);font-style:italic;font-size:.62rem;fill:var(--mist);transition:fill .3s}
+.bm-line{stroke:var(--parchment);stroke-width:1;transition:stroke .3s}
+.bm-dot{fill:none;stroke:var(--mist);stroke-width:1;transition:all .3s}
+g.on .bm-lab{fill:var(--ink)}g.on .bm-num{fill:var(--amber-deep)}g.on .bm-line{stroke:var(--amber)}g.on .bm-dot{stroke:var(--amber);fill:var(--amber)}
+.bm-panel h3{font-family:var(--didot);font-style:italic;font-weight:400;font-size:clamp(1.5rem,3vw,2.2rem);min-height:1.3em}
+.bm-panel .chips{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.3rem;min-height:5.5rem;align-content:flex-start}
+.chip{font-size:.85rem;padding:.5em 1.1em;border-radius:999px;border:1px solid var(--parchment);background:var(--porcelain);color:var(--ink);display:inline-flex;gap:.5em;align-items:baseline;opacity:0;transform:translateY(8px);transition:opacity .45s,transform .45s}
+.chip.in{opacity:1;transform:none}
+.chip b{font-weight:400;font-family:var(--didot);font-style:italic;color:var(--mist)}
+.bm-hint{color:var(--mist);font-size:.95rem;max-width:36ch}
+footer{padding:4rem 0 6rem;color:var(--mist);font-size:.85rem;max-width:60ch}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Uplab Pharmaceuticals · Art direction v2 · lookdev</p>
+    <h1 class="hero">Η φύση, με ακρίβεια <span class="it">φαρμακείου.</span></h1>
+    <p class="hero-sub">Χρώμα, τυπογραφία και ο νέος «χάρτης σώματος» — όλα ζωντανά σε αυτή τη σελίδα, με τις πραγματικές γραμματοσειρές και τους τελικούς τόνους.</p>
+  </header>
+
+  <hr class="rule">
+
+  <!-- ————— 01 ΧΡΩΜΑ ————— -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>Χρώμα — τέσσερα ουδέτερα, ένα μελάνι, μία σταγόνα μέλι</h2></div>
+
+    <p class="ramp-label">Πορσελάνη — το πεδίο (4 τόνοι, όχι 1)</p>
+    <div class="ramp">
+      <div class="sw" style="background:#FCFBF8"><b>paper</b><span>#FCFBF8 · κάρτες</span></div>
+      <div class="sw" style="background:#F5F2EB"><b>porcelain</b><span>#F5F2EB · σελίδα</span></div>
+      <div class="sw" style="background:#ECE6DA"><b>bone</b><span>#ECE6DA · εναλλαγή</span></div>
+      <div class="sw" style="background:#DFD7C6"><b>parchment</b><span>#DFD7C6 · γραμμές</span></div>
+      <div class="sw" style="background:#E9ECE5"><b>sage-veil</b><span>#E9ECE5 · φύση</span></div>
+    </div>
+
+    <p class="ramp-label">Μελάνι — η δομή (φέρει όλο το βάρος)</p>
+    <div class="ramp" style="color:#FCFBF8">
+      <div class="sw" style="background:#0F1922"><b>ink-black</b><span>#0F1922 · display</span></div>
+      <div class="sw" style="background:#1C2B3A"><b>ink</b><span>#1C2B3A · κείμενο</span></div>
+      <div class="sw" style="background:#43566A"><b>slate</b><span>#43566A · captions</span></div>
+      <div class="sw" style="background:#66757E"><b>mist</b><span>#66757E · muted</span></div>
+      <div class="sw" style="background:#16222E"><b>night</b><span>#16222E · κεφάλαια</span></div>
+    </div>
+
+    <p class="ramp-label">Μέλι — μόνο η πρόθεση (και πουθενά αλλού)</p>
+    <div class="ramp">
+      <div class="sw" style="background:#C9803E;color:#0F1922"><b>amber</b><span>#C9803E · CTA</span></div>
+      <div class="sw" style="background:#E9A45C;color:#0F1922"><b>amber-bright</b><span>#E9A45C · σε night</span></div>
+      <div class="sw" style="background:#8A5A2E;color:#FCFBF8"><b>amber-deep</b><span>#8A5A2E · κείμενο</span></div>
+    </div>
+
+    <div class="prop">
+      <div class="prop-bar">
+        <div style="width:72%;background:linear-gradient(90deg,#FCFBF8,#F5F2EB 40%,#ECE6DA)"></div>
+        <div style="width:18%;background:#16222E"></div>
+        <div style="width:8%;background:#43566A"></div>
+        <div style="width:2%;background:#C9803E"></div>
+      </div>
+      <div class="prop-cap"><span>72% πορσελάνη</span><span>18% night κεφάλαια</span><span>8% μελάνι/slate</span><span><b style="color:var(--amber-deep)">2% μέλι</b></span></div>
+    </div>
+
+    <div class="laws">
+      <div class="law"><h4>Το μέλι είναι πρόθεση.</h4><p>Εμφανίζεται <em>μόνο</em> σε: κύριο CTA, ενεργή κατάσταση του χάρτη σώματος, υποβολή φόρμας, επιλογή κειμένου. <em>Φεύγει</em> από: captions, links, hovers, icons, chips, τίτλους.</p></div>
+      <div class="law"><h4>Το μελάνι κουβαλά τη δομή.</h4><p>Eyebrows και ετικέτες γίνονται <em>slate</em>, όχι αμπέρ. Τα links υπογραμμίζονται με μελάνι. Ο δεύτερος τόνος έμφασης είναι η <em>πλάγια Didot</em>, όχι χρώμα.</p></div>
+      <div class="law"><h4>Η πορσελάνη αναπνέει σε 4 τόνους.</h4><p>Ενότητες εναλλάσσονται paper → porcelain → bone· το <em>sage-veil</em> μόνο στα κεφάλαια της φύσης. Τα σκοτεινά κινηματογραφικά κεφάλαια πατούν σε <em>night</em>, όχι σε μαύρο.</p></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ————— 02 ΤΥΠΟΓΡΑΦΙΑ ————— -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Τυπογραφία — GFS Didot &amp; Sofia Sans</h2></div>
+
+    <div class="spec">
+      <p class="spec-meta">GFS Didot · Greek Font Society · τα στοιχεία του Κοραή, 1805 → 1994</p>
+      <p class="sp-didot-xl">Παράγουμε, επιλέγουμε και διακινούμε φάρμακα με σεβασμό στον άνθρωπο.</p>
+      <p class="sp-didot-it">Η ελληνική τυπογραφία των εκδόσεων δύο αιώνων — <span style="font-family:var(--didot)">ἦθος, ἐπιμέλεια, ἰσορροπία</span> — στην υπηρεσία της υγείας.</p>
+      <p class="glyphs">ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ αβγδεζηθικλμνξοπρσςτυφχψω άέήίόύώ ϊϋΐΰ ᾶῆῷ ἀἁἂᾳ 0123456789</p>
+    </div>
+
+    <div class="spec">
+      <p class="spec-meta">GFS Didot Display · η «υπέρμαυρη» των εφημερίδων του ’50 · μόνο για τους 3 πυλώνες</p>
+      <p class="sp-black">ΠΑΡΑΓΟΥΜΕ<br>ΕΠΙΛΕΓΟΥΜΕ<br>ΔΙΑΚΙΝΟΥΜΕ<small>Ψηφιοποίηση Γ. Τριανταφυλλάκου από φύλλα εφημερίδων της δεκαετίας του 1950.</small></p>
+    </div>
+
+    <div class="spec">
+      <p class="spec-meta">Sofia Sans · Lettersoup (B. Nikoltchev) · variable 1–1000 · σχεδιασμένη για σήμανση σε 3 αλφάβητα ΕΕ</p>
+      <div class="sp-sofia">
+        <p>Η Uplab δραστηριοποιείται στην παραγωγή, εισαγωγή και διακίνηση φαρμακευτικών και παραφαρμακευτικών προϊόντων. Με σύγχρονες εγκαταστάσεις και πιστοποιημένες διαδικασίες, φροντίζουμε κάθε προϊόν να φτάνει στο φαρμακείο όπως ακριβώς σχεδιάστηκε — με ασφάλεια, συνέπεια και πλήρη ιχνηλασιμότητα.</p>
+        <p class="caps">Δείτε τα προϊόντα · Συνεργασία B2B · Σημεία πώλησης</p>
+        <div class="btn-row">
+          <button class="btn btn-amber">Βρείτε το προϊόν σας</button>
+          <button class="btn btn-ghost">Γίνετε συνεργάτης</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ————— 03 ΧΑΡΤΗΣ ΣΩΜΑΤΟΣ ————— -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>Χάρτης σώματος — «Ανατομικός Άτλας»</h2></div>
+    <div class="bm-stage">
+      <div class="bm-fig" id="bmFig">
+        <canvas id="bmCanvas" width="540" height="920" aria-hidden="true"></canvas>
+        <svg id="bmOverlay" viewBox="0 0 135 230" aria-hidden="true"></svg>
+      </div>
+      <div class="bm-panel">
+        <p class="eyebrow">Τι σας απασχολεί;</p>
+        <h3 id="bmTitle">Δείξτε στο σώμα.</h3>
+        <div class="chips" id="bmChips"></div>
+        <p class="bm-hint" id="bmHint">Η φιγούρα είναι χαραγμένη από ~2.500 κουκκίδες μελανιού, σαν λιθογραφία ανατομικού άτλαντα. Όταν δείξετε μια περιοχή, οι κοντινές κουκκίδες συρρέουν εκεί και γίνονται μέλι — το δραστικό συστατικό συγκεντρώνεται εκεί που χρειάζεται.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Lookdev μόνο — δεν είναι σελίδα του τελικού site. Οι γραμματοσειρές είναι ήδη self-hosted στο /public/fonts (subsets greek + greek-ext + latin, άδεια SIL OFL και για τις δύο οικογένειες).
+  </footer>
+</div>
+
+<script>
+(() => {
+  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // ————— figure space: 135 × 230 (figure centered at x=67.5) —————
+  const CX = 67.5;
+  // SDF primitives for a properly proportioned standing figure (~7.5 heads)
+  const sdSeg = (px,py,ax,ay,bx,by,r) => {
+    const pax=px-ax, pay=py-ay, bax=bx-ax, bay=by-ay;
+    const h=Math.max(0,Math.min(1,(pax*bax+pay*bay)/(bax*bax+bay*bay)));
+    return Math.hypot(pax-bax*h, pay-bay*h)-r;
+  };
+  const sdEll = (px,py,cx,cy,rx,ry) => {
+    const dx=(px-cx)/rx, dy=(py-cy)/ry;
+    return (Math.hypot(dx,dy)-1)*Math.min(rx,ry);
+  };
+  // smooth-min: organic joins between anatomical volumes (no lumpy unions)
+  const smin = (a,b,k=2.2) => {
+    const h=Math.max(0,Math.min(1,.5+.5*(b-a)/k));
+    return b*(1-h)+a*h-k*h*(1-h);
+  };
+  const body = (x,y) => {
+    let d = sdEll(x,y,CX,14.5,7.2,9.2);                 // head
+    d = smin(d, sdSeg(x,y,CX,22,CX,30,3.1));            // neck
+    d = smin(d, sdEll(x,y,CX,45,13.8,10));              // chest/shoulders
+    d = smin(d, sdEll(x,y,CX,63,10.8,13));              // waist
+    d = smin(d, sdEll(x,y,CX,82,11.4,10));              // hips
+    for (const s of [-1,1]) {
+      // arms kept as a hard min so the armpit gap survives
+      let a = sdSeg(x,y,CX+s*12.2,38.5,CX+s*17.5,50,4.0);
+      a = smin(a, sdSeg(x,y,CX+s*17.5,50,CX+s*19.5,68,3.4));
+      a = smin(a, sdSeg(x,y,CX+s*19.5,68,CX+s*22.5,90,2.9));
+      a = smin(a, sdEll(x,y,CX+s*23.5,95.5,2.9,4.0));
+      d = Math.min(d,a);
+      // legs separated at the thigh so the figure doesn't fuse
+      let l = sdSeg(x,y,CX+s*7.6,94,CX+s*8.2,140,5.1);
+      l = smin(l, sdSeg(x,y,CX+s*8.2,140,CX+s*8.4,184,3.9));
+      l = smin(l, sdSeg(x,y,CX+s*8.4,184,CX+s*8.4,203,2.5));
+      l = smin(l, sdSeg(x,y,CX+s*8.4,206,CX+s*13.8,207.5,2.6));
+      d = Math.min(d,l);
+    }
+    return d;
+  };
+
+  // ————— regions (real data.ts regions, anchored on this figure) —————
+  const REGIONS = [
+    { id:"head",   n:"01", label:"Κεφάλι & Νους",              x:CX,    y:15,  r:13, side:"R",
+      cats:[["Υγιή μάτια",4],["Αϋπνία",3],["Ψυχική υγεία",5],["Νευρικό σύστημα",6]] },
+    { id:"chest",  n:"02", label:"Αναπνοή & Καρδιά",           x:CX,    y:44,  r:14, side:"L",
+      cats:[["Αναπνευστικό",7],["Αλλεργίες",4],["Υγεία καρδιάς",3]] },
+    { id:"immune", n:"03", label:"Άμυνα & Ενέργεια",           x:CX-19, y:66,  r:11, side:"L",
+      cats:[["Ενίσχυση ανοσοποιητικού",9],["Ενέργεια & Τόνωση",6]] },
+    { id:"skin",   n:"04", label:"Δέρμα",                      x:CX+19, y:66,  r:11, side:"R",
+      cats:[["Δέρμα",8],["Αντηλιακά",5],["Αντισηπτικά",4]] },
+    { id:"gut",    n:"05", label:"Πεπτικό",                    x:CX,    y:66,  r:11, side:"L",
+      cats:[["Γαστρεντερική υγεία",8],["Ήπαρ",3],["Έλεγχος βάρους",4]] },
+    { id:"pelvis", n:"06", label:"Γυναικεία & Ουροποιητικό",   x:CX,    y:88,  r:11, side:"R",
+      cats:[["Γυναικολογική φροντίδα",6],["Ουροποιητικό",4]] },
+    { id:"limbs",  n:"07", label:"Οστά, Μύες & Κυκλοφορία",    x:CX-8,  y:130, r:14, side:"L",
+      cats:[["Οστά & αρθρώσεις",7],["Μυϊκό σύστημα",5],["Φλεβική υγεία",4]] },
+    { id:"child",  n:"08", label:"Παιδική φροντίδα",           x:CX+23, y:97,  r:10, side:"R",
+      cats:[["Παιδική φροντίδα",11]] },
+  ];
+
+  // ————— stipple field (deterministic) —————
+  let seed = 7;
+  const rnd = () => (seed = (seed*1103515245+12345)&0x7fffffff, seed/0x7fffffff);
+  const dots = [];
+  const STEP = 1.05;
+  for (let y=2; y<226; y+=STEP) for (let x=30; x<105; x+=STEP) {
+    const jx = x+(rnd()-.5)*STEP, jy = y+(rnd()-.5)*STEP;
+    const d = body(jx,jy);
+    if (d>0.15) continue;
+    // engraving density: near-certain at the contour, sparser toward the core
+    const edge = Math.exp(-Math.abs(d+0.15)/1.9);
+    const p = 0.38 + 0.62*edge;
+    if (rnd()>p) continue;
+    dots.push({ x:jx, y:jy, ox:jx, oy:jy,
+      r:.40+rnd()*.46, a:.32+.28*edge+rnd()*.28,
+      ph:rnd()*Math.PI*2, sp:.4+rnd()*.6, sw:1.4+rnd()*.4,
+      cx:jx, cy:jy, cr:0, ca:0, amber:0 });
+  }
+
+  const cvs = document.getElementById("bmCanvas");
+  const ctx = cvs.getContext("2d");
+  const fig = document.getElementById("bmFig");
+  const SCALE = 4; // canvas units per figure unit
+  const INK = [28,43,58], AMB = [201,128,62], AMB_B = [233,164,92];
+
+  let active = null, t = 0;
+  const lerp=(a,b,k)=>a+(b-a)*k;
+
+  function draw() {
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+    // soft amber pool behind active region
+    if (active) {
+      const g = ctx.createRadialGradient(active.x*SCALE, active.y*SCALE, 2, active.x*SCALE, active.y*SCALE, active.r*1.9*SCALE);
+      g.addColorStop(0,"rgba(201,128,62,.16)"); g.addColorStop(1,"rgba(201,128,62,0)");
+      ctx.fillStyle=g; ctx.beginPath();
+      ctx.arc(active.x*SCALE, active.y*SCALE, active.r*1.9*SCALE, 0, 7); ctx.fill();
+    }
+    for (const d of dots) {
+      const dist = active ? Math.hypot(d.ox-active.x, d.oy-active.y) : 1e9;
+      const inR = active && dist < active.r;
+      // targets
+      let tx=d.ox, ty=d.oy, tr=d.r, ta=d.a, tAmber=0;
+      if (inR) {
+        // distance-staggered pull keeps the cluster stippled, not a solid blob
+        const k = .18 + .38*(1 - dist/active.r);
+        tx = lerp(d.ox, active.x, k) + Math.sin(d.ph*3.7)*1.3;
+        ty = lerp(d.oy, active.y, k) + Math.cos(d.ph*2.9)*1.3;
+        tr = d.r*d.sw; ta = .95; tAmber = 1;
+      } else if (active) { ta = d.a*.45; }
+      const E = REDUCED ? 1 : .09;
+      d.cx=lerp(d.cx,tx,E); d.cy=lerp(d.cy,ty,E);
+      d.cr=lerp(d.cr||d.r,tr,E); d.ca=lerp(d.ca||d.a,ta,E);
+      d.amber=lerp(d.amber,tAmber,E);
+      // idle breath
+      let bx=0,by=0;
+      if (!REDUCED && !inR) { bx=Math.sin(t*.0006*d.sp+d.ph)*.28; by=Math.cos(t*.0005*d.sp+d.ph)*.28; }
+      const c0=INK, c1=AMB;
+      const r=Math.round(lerp(c0[0],c1[0],d.amber)), g=Math.round(lerp(c0[1],c1[1],d.amber)), b=Math.round(lerp(c0[2],c1[2],d.amber));
+      ctx.fillStyle=`rgba(${r},${g},${b},${d.ca})`;
+      ctx.beginPath();
+      ctx.arc((d.cx+bx)*SCALE,(d.cy+by)*SCALE,d.cr*SCALE*.5,0,7);
+      ctx.fill();
+    }
+  }
+  draw(); // first paint even before rAF is available (hidden tab, reduced motion)
+  function loop(now){ t=now; draw(); requestAnimationFrame(loop); }
+  if (!REDUCED) requestAnimationFrame(loop); // reduced motion: redraw only on state change
+
+  // ————— SVG overlay: numbered leader lines (medical-atlas convention) —————
+  const svg = document.getElementById("bmOverlay");
+  const NS = "http://www.w3.org/2000/svg";
+  const title = document.getElementById("bmTitle");
+  const chips = document.getElementById("bmChips");
+  const hint = document.getElementById("bmHint");
+  const groups = {};
+
+  REGIONS.forEach(rg => {
+    const g = document.createElementNS(NS,"g");
+    g.style.cursor="pointer";
+    const endX = rg.side==="L" ? 6 : 129;
+    const elbowX = rg.side==="L" ? rg.x-rg.r-3 : rg.x+rg.r+3;
+    const line = document.createElementNS(NS,"polyline");
+    line.setAttribute("points",`${rg.x+(rg.side==="L"?-rg.r*.55:rg.r*.55)},${rg.y} ${elbowX},${rg.y} ${endX+(rg.side==="L"?2:-2)},${rg.y}`);
+    line.setAttribute("fill","none"); line.setAttribute("class","bm-line");
+    const dot = document.createElementNS(NS,"circle");
+    dot.setAttribute("cx",rg.x+(rg.side==="L"?-rg.r*.55:rg.r*.55)); dot.setAttribute("cy",rg.y); dot.setAttribute("r",1.1);
+    dot.setAttribute("class","bm-dot");
+    const num = document.createElementNS(NS,"text");
+    num.setAttribute("x",endX); num.setAttribute("y",rg.y-1.6);
+    num.setAttribute("text-anchor",rg.side==="L"?"start":"end");
+    num.setAttribute("class","bm-num"); num.textContent=rg.n;
+    const lab = document.createElementNS(NS,"text");
+    lab.setAttribute("x",endX); lab.setAttribute("y",rg.y+3.6);
+    lab.setAttribute("text-anchor",rg.side==="L"?"start":"end");
+    lab.setAttribute("class","bm-lab");
+    lab.textContent = rg.label.length>18 ? rg.label.slice(0,17)+"…" : rg.label;
+    // generous invisible hit zone (44px+ when rendered)
+    const hit = document.createElementNS(NS,"circle");
+    hit.setAttribute("cx",rg.x); hit.setAttribute("cy",rg.y); hit.setAttribute("r",Math.max(rg.r,9));
+    hit.setAttribute("fill","transparent");
+    hit.setAttribute("tabindex","0"); hit.setAttribute("role","button");
+    hit.setAttribute("aria-label",rg.label);
+    g.append(line,dot,num,lab,hit);
+    svg.appendChild(g);
+    groups[rg.id]=g;
+    const on = ()=>setActive(rg), off=()=>{};
+    g.addEventListener("pointerenter",on);
+    g.addEventListener("click",on);
+    hit.addEventListener("focus",on);
+  });
+
+  function setActive(rg){
+    active = rg;
+    Object.values(groups).forEach(g=>g.classList.remove("on"));
+    if (rg) {
+      groups[rg.id].classList.add("on");
+      title.textContent = rg.label;
+      hint.style.display="none";
+      chips.innerHTML="";
+      rg.cats.forEach(([name,count],i)=>{
+        const c=document.createElement("span");
+        c.className="chip"; c.innerHTML=`${name} <b>${count}</b>`;
+        chips.appendChild(c);
+        setTimeout(()=>c.classList.add("in"), REDUCED?0:60*i);
+      });
+    }
+    if (REDUCED) draw();
+  }
+})();
+</script>
+</body>
+</html>
