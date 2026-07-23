@@ -34,6 +34,8 @@ export default function Pillars() {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // desktop only — on mobile the pillars are a plain stacked, all-visible list
+    if (window.innerWidth < 1024 || window.matchMedia("(pointer: coarse)").matches) return;
 
     const ctx = gsap.context(() => {
       const vh = window.innerHeight || document.documentElement.clientHeight || 800;
@@ -62,9 +64,13 @@ export default function Pillars() {
   }, []);
 
   return (
-    <section ref={ref} className="relative h-[100dvh] overflow-hidden bg-night" aria-label="Παράγουμε, επιλέγουμε, διακινούμε">
+    <section
+      ref={ref}
+      className="relative bg-night py-act lg:h-[100dvh] lg:overflow-hidden lg:py-0"
+      aria-label="Παράγουμε, επιλέγουμε, διακινούμε"
+    >
       <video
-        className="absolute inset-0 h-full w-full object-cover opacity-55"
+        className="absolute inset-0 h-full w-full object-cover opacity-40 lg:opacity-55"
         src="/media/factory.mp4"
         poster="/media/factory-still.png"
         muted
@@ -73,19 +79,18 @@ export default function Pillars() {
         autoPlay
         aria-hidden
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-night/85 via-night/45 to-transparent" aria-hidden />
+      <div className="absolute inset-0 bg-gradient-to-r from-night/90 via-night/60 to-night/30 lg:via-night/45 lg:to-transparent" aria-hidden />
 
-      <div className="relative z-10 flex h-full items-end px-[clamp(1.2rem,4vw,4.5rem)] pb-chapter">
-        <div className="relative min-h-[42vh] w-full max-w-3xl">
-          {PILLARS.map((p, i) => (
+      <div className="relative z-10 flex px-[clamp(1.2rem,4vw,4.5rem)] lg:h-full lg:items-end lg:pb-chapter">
+        <div className="relative w-full max-w-3xl lg:min-h-[42vh]">
+          {PILLARS.map((p) => (
             <article
               key={p.no}
               data-pillar
-              className="absolute inset-x-0 bottom-0"
-              style={{ opacity: i === 0 ? 1 : 0 }}
+              className="mb-verse last:mb-0 lg:absolute lg:inset-x-0 lg:bottom-0 lg:mb-0"
             >
               <span className="caption-tag !text-porcelain/60">{p.no}</span>
-              <h2 className="display-black mt-hair text-[clamp(2.5rem,6.6vw,5.6rem)] text-porcelain">{p.title}</h2>
+              <h2 className="display-black mt-hair text-[clamp(1.5rem,6vw,5.6rem)] text-porcelain">{p.title}</h2>
               <p className="mt-line max-w-[42ch] text-[clamp(0.95rem,1.4vw,1.15rem)] leading-relaxed text-porcelain/75">
                 {p.text}
               </p>

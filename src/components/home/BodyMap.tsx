@@ -271,26 +271,26 @@ export default function BodyMap() {
                     transition: `opacity 0.6s var(--ease-lab) ${0.15 + i * 0.09}s`,
                   }}
                 >
-                  {/* elbow leader: body point → bend → label Y, then out to the margin */}
+                  {/* elbow leader + labels — hidden on mobile (they'd crop off-screen) */}
                   <polyline
                     points={`${dotX},${a.y} ${bendX},${a.y} ${bendX},${ly} ${lineEndX},${ly}`}
                     fill="none"
                     strokeWidth="0.35"
                     strokeLinejoin="round"
-                    className={`transition-colors duration-300 ${on ? "stroke-amber" : "stroke-parchment"}`}
+                    className={`hidden lg:block transition-colors duration-300 ${on ? "stroke-amber" : "stroke-parchment"}`}
                   />
                   <circle
                     cx={dotX}
                     cy={a.y}
-                    r="1.1"
-                    strokeWidth="0.35"
-                    className={`transition-colors duration-300 ${on ? "fill-amber stroke-amber" : "fill-none stroke-mist"}`}
+                    r="1.3"
+                    strokeWidth="0.4"
+                    className={`transition-colors duration-300 ${on ? "fill-amber stroke-amber" : "fill-parchment stroke-mist"}`}
                   />
                   <text
                     x={textX}
                     y={ly - 1.4}
                     textAnchor={anchor}
-                    className={`font-display italic transition-colors duration-300 ${on ? "fill-amber-deep" : "fill-mist"}`}
+                    className={`hidden lg:block font-display italic transition-colors duration-300 ${on ? "fill-amber-deep" : "fill-mist"}`}
                     fontSize="3.6"
                   >
                     {a.n}
@@ -299,7 +299,7 @@ export default function BodyMap() {
                     x={textX}
                     y={ly + 3.9}
                     textAnchor={anchor}
-                    className={`transition-colors duration-300 ${on ? "fill-ink" : "fill-slate"}`}
+                    className={`hidden lg:block transition-colors duration-300 ${on ? "fill-ink" : "fill-slate"}`}
                     fontSize="3.3"
                     style={{ fontWeight: 700 }}
                   >
@@ -322,6 +322,28 @@ export default function BodyMap() {
               );
             })}
           </svg>
+
+          {/* mobile: tappable region list (the atlas labels are desktop-only) */}
+          <ul className="mt-stanza grid grid-cols-2 gap-x-line gap-y-[0.35rem] lg:hidden">
+            {bodyRegions.map((r) => {
+              const on = active === r.id;
+              return (
+                <li key={r.id}>
+                  <button
+                    type="button"
+                    onClick={() => setActive(r.id)}
+                    aria-pressed={on}
+                    className={`flex w-full items-baseline gap-2 py-1 text-left text-[0.9rem] transition-colors ${
+                      on ? "text-ink" : "text-mist"
+                    }`}
+                  >
+                    <span className="font-display text-[0.78rem] italic text-mist">{ANCHORS[r.id]?.n}</span>
+                    {r.label}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
         </div>
 
         {/* right: reveal panel */}

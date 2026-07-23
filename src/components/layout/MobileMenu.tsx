@@ -81,11 +81,11 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-[65] flex flex-col overflow-y-auto bg-night text-porcelain"
-            initial={reduce ? { opacity: 0 } : { clipPath: "circle(0% at 100% 0%)" }}
-            animate={reduce ? { opacity: 1 } : { clipPath: "circle(150% at 100% 0%)" }}
-            exit={reduce ? { opacity: 0 } : { clipPath: "circle(0% at 100% 0%)" }}
-            transition={{ duration: 0.6, ease: EASE }}
+            className="fixed inset-0 z-[60] flex flex-col overflow-y-auto overscroll-contain bg-night text-porcelain"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            transition={{ duration: 0.32, ease: EASE }}
           >
             <nav
               aria-label="Κύρια πλοήγηση"

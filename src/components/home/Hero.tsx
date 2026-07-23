@@ -178,7 +178,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       aria-label="Uplab Pharmaceuticals"
-      className="relative h-[100dvh] w-full overflow-hidden bg-sky"
+      className="relative min-h-[100svh] w-full overflow-hidden bg-sky lg:h-[100dvh] lg:min-h-0"
     >
       {/* poster underneath the canvas until frames decode — no flash of empty */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
