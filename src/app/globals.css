@@ -3,7 +3,8 @@
 /* ————— Self-hosted fonts (Greek + Latin, unicode-range subsets) —————
    GFS Didot — Greek Font Society (Κατσουλίδης/Ματθιόπουλος, 1994· τα στοιχεία του Κοραή, 1805). OFL.
    GFS Didot Display — υπέρμαυρη τίτλων εφημερίδων '50 (Τριανταφυλλάκος). Caps-only Latin. OFL.
-   Sofia Sans — Lettersoup (Nikoltchev/Petrova), variable wght 1–1000. OFL. */
+   GFS Neohellenic — Greek Font Society. Body/UI (400) + subheaders/card headers (700). OFL.
+   Cinzel — flagship display serif (logo + flagship product names, Latin only). OFL. */
 @font-face {
   font-family: "GFS Didot";
   font-style: normal;
@@ -100,45 +101,72 @@
   src: url("/fonts/didot-display-black-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF;
 }
+/* GFS Neohellenic — Greek Font Society. OFL. Body/UI (400) + subheaders (700).
+   Static weights (not variable): 400 and 700 only. */
 @font-face {
-  font-family: "Sofia Sans";
+  font-family: "GFS Neohellenic";
   font-style: normal;
-  font-weight: 1 1000;
+  font-weight: 400;
   font-display: swap;
-  src: url("/fonts/sofiasans-normal-greek.woff2") format("woff2");
+  src: url("/fonts/neohellenic-400-greek.woff2") format("woff2");
   unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
 }
 @font-face {
-  font-family: "Sofia Sans";
+  font-family: "GFS Neohellenic";
   font-style: normal;
-  font-weight: 1 1000;
+  font-weight: 400;
   font-display: swap;
-  src: url("/fonts/sofiasans-normal-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20C0;
+  src: url("/fonts/neohellenic-400-greek-ext.woff2") format("woff2");
+  unicode-range: U+1F00-1FFF;
 }
 @font-face {
-  font-family: "Sofia Sans";
+  font-family: "GFS Neohellenic";
   font-style: normal;
-  font-weight: 1 1000;
+  font-weight: 400;
   font-display: swap;
-  src: url("/fonts/sofiasans-normal-latin.woff2") format("woff2");
+  src: url("/fonts/neohellenic-400-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Sofia Sans";
-  font-style: italic;
-  font-weight: 1 1000;
+  font-family: "GFS Neohellenic";
+  font-style: normal;
+  font-weight: 700;
   font-display: swap;
-  src: url("/fonts/sofiasans-italic-greek.woff2") format("woff2");
+  src: url("/fonts/neohellenic-700-greek.woff2") format("woff2");
   unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
 }
 @font-face {
-  font-family: "Sofia Sans";
-  font-style: italic;
-  font-weight: 1 1000;
+  font-family: "GFS Neohellenic";
+  font-style: normal;
+  font-weight: 700;
   font-display: swap;
-  src: url("/fonts/sofiasans-italic-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122;
+  src: url("/fonts/neohellenic-700-greek-ext.woff2") format("woff2");
+  unicode-range: U+1F00-1FFF;
+}
+@font-face {
+  font-family: "GFS Neohellenic";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/neohellenic-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD;
+}
+/* Cinzel — flagship display serif. OFL. Latin only (logo + flagship product names). */
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/cinzel-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/cinzel-600-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+1E00-1E9F, U+2020, U+20A0-20AB, U+2C60-2C7F, U+A720-A7FF;
 }
 
 /* ————— Design tokens: «Η Ισορροπία» v2 —————
@@ -175,7 +203,8 @@
 
   --font-display: "GFS Didot", "Didot", Georgia, serif;
   --font-display-black: "GFS Didot Display", "GFS Didot", Georgia, serif;
-  --font-body: "Sofia Sans", "Segoe UI", system-ui, sans-serif;
+  --font-body: "GFS Neohellenic", "Segoe UI", system-ui, sans-serif;
+  --font-logo: "Cinzel", "GFS Didot", Georgia, serif;
 
   /* Irregular spacing scale tied to the typographic scale — deliberately not 4/8/16/24 */
   --spacing-hair: 0.3rem;
@@ -202,7 +231,7 @@ body {
   background: var(--color-porcelain);
   color: var(--color-ink);
   font-family: var(--font-body);
-  font-weight: 390;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
@@ -243,11 +272,25 @@ body {
 }
 .caption-tag {
   font-family: var(--font-body);
-  font-weight: 620;
+  font-weight: 700;
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-slate);
+}
+
+/* Subheaders / small titles / card headers — GFS Neohellenic Bold (per type system) */
+.subhead {
+  font-family: var(--font-body);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+/* Flagship display — Cinzel, logo + flagship product names only */
+.logo-type {
+  font-family: var(--font-logo);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 /* ————— interaction primitives ————— */

@@ -5,9 +5,12 @@ export default function Footer() {
     <footer className="bg-night pb-[4.5rem] pt-chapter text-porcelain">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-verse px-[clamp(1.2rem,4vw,4.5rem)] md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="font-display text-[1.5rem] font-bold">
-            UPLAB
-          </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo.png"
+            alt="Uplab Pharmaceuticals"
+            className="h-8 w-auto [filter:brightness(0)_invert(1)]"
+          />
           <p className="mt-breath max-w-[36ch] text-[0.85rem] leading-relaxed text-porcelain/55">
             Uplab Pharmaceuticals — 10ο χλμ Ε.Ο. Αθηνών-Λαμίας, Μεταμόρφωση, Αττική 14452
           </p>

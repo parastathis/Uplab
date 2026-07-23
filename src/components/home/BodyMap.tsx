@@ -32,6 +32,39 @@ const ANCHORS: Record<string, { x: number; y: number; r: number; side: "L" | "R"
   child:  { x: CX + 23, y: 96,  r: 10, side: "R", n: "08" },
 };
 
+/* Label Y-slots per side: sorted top→bottom and pushed apart by ≥GAP so the
+   leader-line labels never fall on top of one another (immune/gut used to
+   collide on the left). The leader then bends from the body up/down to this Y. */
+const LABEL_Y: Record<string, number> = (() => {
+  const GAP = 13;
+  const out: Record<string, number> = {};
+  (["L", "R"] as const).forEach((side) => {
+    const ids = Object.keys(ANCHORS)
+      .filter((id) => ANCHORS[id].side === side)
+      .sort((a, b) => ANCHORS[a].y - ANCHORS[b].y);
+    let prev = -Infinity;
+    ids.forEach((id) => {
+      const y = Math.max(ANCHORS[id].y, prev + GAP);
+      out[id] = y;
+      prev = y;
+    });
+  });
+  return out;
+})();
+
+/* Short leader labels (kept tidy in the margin); the full region name + its
+   categories appear in the reveal panel on hover. */
+const SHORT: Record<string, string> = {
+  head: "Κεφάλι & Νους",
+  chest: "Αναπνοή & Καρδιά",
+  immune: "Άμυνα & Ενέργεια",
+  skin: "Δέρμα",
+  gut: "Πεπτικό",
+  pelvis: "Γυναικεία & Ουρο.",
+  limbs: "Οστά & Μύες",
+  child: "Παιδική φροντίδα",
+};
+
 /* ————— signed-distance figure (smooth-blended anatomical volumes) ————— */
 const sdSeg = (px: number, py: number, ax: number, ay: number, bx: number, by: number, r: number) => {
   const pax = px - ax, pay = py - ay, bax = bx - ax, bay = by - ay;
@@ -203,12 +236,12 @@ export default function BodyMap() {
     <section
       ref={sectionRef}
       data-active={active ?? ""}
-      className="relative overflow-hidden bg-bone py-act"
+      className="relative overflow-hidden bg-bone py-chapter"
       aria-label="Βρείτε προϊόν ανά ανάγκη υγείας"
     >
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-chapter px-[clamp(1.2rem,4vw,4.5rem)] lg:grid-cols-[1fr_1.05fr]">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-chapter px-[clamp(1.2rem,4vw,4.5rem)] lg:grid-cols-[0.95fr_1.05fr]">
         {/* left: the engraved figure with its atlas index */}
-        <div className="relative mx-auto w-full max-w-[26rem] select-none">
+        <div className="relative mx-auto w-full max-w-[19rem] select-none">
           <canvas
             ref={canvasRef}
             width={VIEW_W * SCALE}
@@ -221,9 +254,12 @@ export default function BodyMap() {
               const a = ANCHORS[r.id];
               if (!a) return null;
               const on = active === r.id;
-              const endX = a.side === "L" ? 4 : VIEW_W - 4;
               const dotX = a.x + (a.side === "L" ? -a.r * 0.55 : a.r * 0.55);
-              const label = r.label.length > 20 ? r.label.slice(0, 19) + "…" : r.label;
+              const bendX = a.side === "L" ? a.x - a.r - 6 : a.x + a.r + 6;
+              const ly = LABEL_Y[r.id] ?? a.y;
+              const lineEndX = a.side === "L" ? 1 : VIEW_W - 1;
+              const textX = a.side === "L" ? -1.5 : VIEW_W + 1.5;
+              const anchor = a.side === "L" ? "end" : "start";
               return (
                 <g
                   key={r.id}
@@ -235,10 +271,12 @@ export default function BodyMap() {
                     transition: `opacity 0.6s var(--ease-lab) ${0.15 + i * 0.09}s`,
                   }}
                 >
+                  {/* elbow leader: body point → bend → label Y, then out to the margin */}
                   <polyline
-                    points={`${dotX},${a.y} ${a.side === "L" ? a.x - a.r - 3 : a.x + a.r + 3},${a.y} ${endX},${a.y}`}
+                    points={`${dotX},${a.y} ${bendX},${a.y} ${bendX},${ly} ${lineEndX},${ly}`}
                     fill="none"
                     strokeWidth="0.35"
+                    strokeLinejoin="round"
                     className={`transition-colors duration-300 ${on ? "stroke-amber" : "stroke-parchment"}`}
                   />
                   <circle
@@ -249,23 +287,23 @@ export default function BodyMap() {
                     className={`transition-colors duration-300 ${on ? "fill-amber stroke-amber" : "fill-none stroke-mist"}`}
                   />
                   <text
-                    x={endX}
-                    y={a.y - 1.8}
-                    textAnchor={a.side === "L" ? "start" : "end"}
+                    x={textX}
+                    y={ly - 1.4}
+                    textAnchor={anchor}
                     className={`font-display italic transition-colors duration-300 ${on ? "fill-amber-deep" : "fill-mist"}`}
-                    fontSize="4.2"
+                    fontSize="3.6"
                   >
                     {a.n}
                   </text>
                   <text
-                    x={endX}
-                    y={a.y + 4}
-                    textAnchor={a.side === "L" ? "start" : "end"}
-                    className={`uppercase transition-colors duration-300 ${on ? "fill-ink" : "fill-mist"}`}
-                    fontSize="3.1"
-                    style={{ letterSpacing: "0.12em", fontWeight: 620 }}
+                    x={textX}
+                    y={ly + 3.9}
+                    textAnchor={anchor}
+                    className={`transition-colors duration-300 ${on ? "fill-ink" : "fill-slate"}`}
+                    fontSize="3.3"
+                    style={{ fontWeight: 700 }}
                   >
-                    {label}
+                    {SHORT[r.id] ?? r.label}
                   </text>
                   {/* generous invisible hit zone; focusable for keyboard users */}
                   <circle
@@ -293,7 +331,7 @@ export default function BodyMap() {
             Δείξτε στο σώμα — σας δείχνουμε τα προϊόντα.
           </h2>
 
-          <div className="relative mt-stanza min-h-[13rem]">
+          <div className="relative mt-stanza min-h-[10rem]">
             <AnimatePresence mode="wait">
               {region ? (
                 <motion.div
@@ -303,8 +341,8 @@ export default function BodyMap() {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
                 >
-                  <h3 className="font-display text-[1.45rem] italic text-ink">
-                    <span className="mr-breath text-[1.05rem] not-italic text-mist">{ANCHORS[region.id]?.n}</span>
+                  <h3 className="subhead text-[1.45rem] text-ink">
+                    <span className="mr-breath text-[1.05rem] text-mist">{ANCHORS[region.id]?.n}</span>
                     {region.label}
                   </h3>
                   <ul className="mt-line flex flex-wrap gap-x-verse gap-y-line">
@@ -340,25 +378,20 @@ export default function BodyMap() {
             </AnimatePresence>
           </div>
 
-          {/* semantic fallback: full list always in the DOM for crawlers/keyboard */}
-          <details className="mt-verse text-[0.85rem] text-mist">
-            <summary className="cursor-pointer transition-colors hover:text-ink">
-              Όλες οι κατηγορίες υγείας
-            </summary>
-            <ul className="mt-breath columns-2 gap-line">
-              {bodyRegions.flatMap((r) => r.categories).map((name) => {
-                const cat = categoryByName(name);
-                if (!cat) return null;
-                return (
-                  <li key={name} className="py-[0.15rem]">
-                    <Link className="hover:text-ink" href={`/proionta?katigoria=${encodeURIComponent(cat.slug)}`}>
-                      {name} ({cat.count})
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </details>
+          {/* SEO/keyboard fallback: full category list, visually hidden */}
+          <ul className="sr-only">
+            {bodyRegions.flatMap((r) => r.categories).map((name) => {
+              const cat = categoryByName(name);
+              if (!cat) return null;
+              return (
+                <li key={name}>
+                  <Link href={`/proionta?katigoria=${encodeURIComponent(cat.slug)}`}>
+                    {name} ({cat.count})
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </section>

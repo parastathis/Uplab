@@ -101,7 +101,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <StaggerItem
                   as="span"
                   key={t}
-                  className="rounded-full bg-sage/25 px-[0.9em] py-[0.35em] text-[0.72rem] tracking-wide text-sage-ink"
+                  className="rounded-[2px] border border-sage/40 bg-sage/15 px-[0.8em] py-[0.35em] text-[0.68rem] uppercase tracking-[0.1em] text-sage-ink"
                 >
                   {t}
                 </StaggerItem>
@@ -168,7 +168,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <Magnetic strength={0.4}>
             <Link
               href="/simeia-polisis"
-              className="cta-sheen inline-block shrink-0 rounded-full bg-amber px-[1.5em] py-[0.65em] text-[0.85rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright"
+              className="btn-solid shrink-0"
               style={{ fontWeight: 560 }}
             >
               Πού θα το βρω;

@@ -58,8 +58,7 @@ export default function Triptych() {
               >
                 <p className={`caption-tag ${w.accent}`}>{w.kicker}</p>
                 <h3
-                  className={`mt-line font-display text-[clamp(1.7rem,3vw,2.5rem)] text-ink ${w.playful ? "rotate-[-1.5deg]" : ""} transition-transform duration-500 group-hover:rotate-0`}
-                  style={{ fontWeight: w.playful ? 700 : 400 }}
+                  className={`logo-type mt-line text-[clamp(1.7rem,3vw,2.5rem)] text-ink ${w.playful ? "rotate-[-1.5deg]" : ""} transition-transform duration-500 group-hover:rotate-0`}
                 >
                   {w.title}
                 </h3>

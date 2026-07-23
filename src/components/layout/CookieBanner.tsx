@@ -37,13 +37,13 @@ export default function CookieBanner() {
             {/* equal prominence by design — GDPR */}
             <button
               onClick={() => decide("rejected")}
-              className="rounded-full border border-ink/25 px-4 py-2 text-[0.8rem] text-ink transition-colors hover:bg-ink hover:text-porcelain"
+              className="rounded-[3px] border border-ink/25 px-4 py-2 text-[0.8rem] text-ink transition-colors hover:bg-ink hover:text-porcelain"
             >
               Απόρριψη όλων
             </button>
             <button
               onClick={() => decide("accepted")}
-              className="rounded-full border border-ink/25 px-4 py-2 text-[0.8rem] text-ink transition-colors hover:bg-ink hover:text-porcelain"
+              className="rounded-[3px] border border-ink/25 px-4 py-2 text-[0.8rem] text-ink transition-colors hover:bg-ink hover:text-porcelain"
             >
               Αποδοχή όλων
             </button>

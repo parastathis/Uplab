@@ -27,7 +27,7 @@ export default function NewsStrip() {
                   {fmtDate(n.date)}
                 </time>
                 <div>
-                  <h3 className="font-display text-[clamp(1.05rem,1.8vw,1.4rem)] leading-snug text-ink transition-colors duration-300 group-hover:text-slate">
+                  <h3 className="subhead text-[clamp(1.05rem,1.8vw,1.4rem)] text-ink transition-colors duration-300 group-hover:text-slate">
                     {n.title}
                   </h3>
                   <p className="mt-hair line-clamp-2 max-w-[68ch] text-[0.88rem] text-mist">{n.excerpt}</p>

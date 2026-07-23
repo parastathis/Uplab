@@ -78,7 +78,7 @@ export default function NewProducts() {
               )}
               {/* fixed-height text block so every card matches */}
               <div className="flex min-h-[5rem] flex-col gap-hair border-t border-ink/8 p-line">
-                <h3 className="line-clamp-1 font-display text-[1.06rem] text-ink">{p.name}</h3>
+                <h3 className="subhead line-clamp-1 text-[1.06rem] text-ink">{p.name}</h3>
                 <p className="line-clamp-1 text-[0.78rem] text-mist">{p.categories.join(" · ")}</p>
               </div>
               <span

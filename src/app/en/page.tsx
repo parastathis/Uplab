@@ -29,7 +29,7 @@ export default function EnHome() {
         <div className="absolute inset-x-0 top-0 h-[30vh] bg-gradient-to-b from-ink/35 to-transparent" aria-hidden />
         <div className="relative z-10 w-full px-[clamp(1.2rem,4vw,4.5rem)] pb-verse">
           <Reveal y={40} duration={1}>
-            <h1 className="display-xl text-porcelain">UPLAB</h1>
+            <h1 className="display-xl logo-type text-porcelain">UPLAB</h1>
           </Reveal>
           <Reveal delay={0.15}>
             <p className="mt-breath max-w-[38ch] font-display italic text-porcelain/85">

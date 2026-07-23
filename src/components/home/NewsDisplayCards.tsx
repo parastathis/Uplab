@@ -44,7 +44,7 @@ export default function NewsDisplayCards({ items }: { items: Item[] }) {
                   {fmtDate(n.date)}
                 </time>
               </div>
-              <h3 className="mt-line line-clamp-2 min-h-[3.4rem] font-display text-[1.25rem] leading-snug text-ink">
+              <h3 className="subhead mt-line line-clamp-2 min-h-[3.4rem] text-[1.25rem] text-ink">
                 {n.title}
               </h3>
               <p className="mt-breath line-clamp-2 text-[0.85rem] leading-relaxed text-mist">{n.excerpt}</p>

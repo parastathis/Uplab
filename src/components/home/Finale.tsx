@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Tiles from "@/components/ui/Tiles";
+import PingPongVideo from "@/components/ui/PingPongVideo";
 
 /** Closing split for both audiences + FAQ accordion, sitting on the tiles field. */
 
@@ -38,17 +39,23 @@ export default function Finale() {
         <div className="grid grid-cols-1 gap-line md:grid-cols-[1.35fr_1fr]">
           <Link
             href="/simeia-polisis"
-            className="pointer-events-auto group flex flex-col justify-between bg-night p-stanza text-porcelain transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1.5"
+            className="pointer-events-auto group relative flex flex-col justify-between overflow-hidden bg-night p-stanza text-porcelain transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-1.5"
             style={{ borderRadius: "0.5rem 3rem 0.5rem 0.5rem", minHeight: "16rem" }}
           >
-            <p className="caption-tag !text-porcelain/60">Για εσάς</p>
-            <div>
+            <PingPongVideo
+              src="/media/family.mp4"
+              poster="/media/family-still.png"
+              className="absolute inset-0 h-full w-full object-cover opacity-35 transition-opacity duration-700 group-hover:opacity-50"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-night via-night/70 to-night/30" aria-hidden />
+            <p className="relative z-10 caption-tag !text-porcelain/60">Για εσάς</p>
+            <div className="relative z-10">
               <h2 className="display-md text-porcelain">Σημεία πώλησης</h2>
-              <p className="mt-breath max-w-[34ch] text-[0.9rem] text-porcelain/65">
+              <p className="mt-breath max-w-[34ch] text-[0.9rem] text-porcelain/70">
                 Βρείτε το κοντινότερο φαρμακείο με προϊόντα Uplab — 2.075+ σημεία σε όλη την Ελλάδα.
               </p>
             </div>
-            <span className="mt-line inline-block text-amber-bright transition-transform duration-500 group-hover:translate-x-2" aria-hidden>
+            <span className="relative z-10 mt-line inline-block text-amber-bright transition-transform duration-500 group-hover:translate-x-2" aria-hidden>
               →
             </span>
           </Link>

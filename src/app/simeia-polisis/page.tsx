@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Tiles from "@/components/ui/Tiles";
 import PageHeader from "@/components/ui/PageHeader";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
+import StoreFinder from "@/components/stores/StoreFinder";
 
 export const metadata: Metadata = {
   title: "Σημεία πώλησης",
@@ -13,12 +14,22 @@ export default function StoresPage() {
   return (
     <div className="relative overflow-hidden bg-porcelain pt-[calc(var(--nav-h)+2rem)]">
       <Tiles rows={26} cols={44} tileSize="md" />
-      <div className="pointer-events-none relative z-10 mx-auto max-w-5xl px-[clamp(1.2rem,4vw,4.5rem)] pb-act">
-        <PageHeader
-          kicker="Πού θα μας βρείτε"
-          title="2.075+ φαρμακεία σε όλη την Ελλάδα."
-          lead="Τα προϊόντα Uplab διατίθενται αποκλειστικά μέσω φαρμακείων και φαρμακαποθηκών. Ρωτήστε τον φαρμακοποιό σας — ή επικοινωνήστε μαζί μας για το κοντινότερο σημείο πώλησης."
-        />
+      <div className="pointer-events-none relative z-10 mx-auto max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)] pb-act">
+        <div className="grid grid-cols-1 items-center gap-chapter lg:grid-cols-[1fr_0.85fr]">
+          <PageHeader
+            kicker="Πού θα μας βρείτε"
+            title="2.075+ φαρμακεία σε όλη την Ελλάδα."
+            lead="Τα προϊόντα Uplab διατίθενται αποκλειστικά μέσω φαρμακείων και φαρμακαποθηκών. Ρωτήστε τον φαρμακοποιό σας — ή αναζητήστε στον χάρτη το κοντινότερο σημείο πώλησης."
+          />
+          <Reveal className="pointer-events-auto" delay={0.1}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/media/gallery/gen-hands-capsule.png"
+              alt="Το σκεύασμα στο χέρι, στο φαρμακείο"
+              className="aspect-[4/5] w-full rounded-[8px] border border-ink/10 object-cover shadow-[0_30px_70px_-45px_rgba(28,43,58,0.6)]"
+            />
+          </Reveal>
+        </div>
 
         <Stagger className="pointer-events-auto mt-chapter grid max-w-3xl grid-cols-1 gap-line sm:grid-cols-2" gap={0.12}>
           <StaggerItem>
@@ -55,6 +66,10 @@ export default function StoresPage() {
           <p className="max-w-[46ch] font-display text-[clamp(1.1rem,2vw,1.6rem)] italic leading-snug text-ink/70">
             Το κανάλι του φαρμακείου προστατεύει τη συμβουλευτική αξία κάθε προϊόντος.
           </p>
+        </Reveal>
+
+        <Reveal delay={0.05} className="mt-act">
+          <StoreFinder />
         </Reveal>
       </div>
     </div>

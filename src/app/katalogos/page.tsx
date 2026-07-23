@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ProsePage from "@/components/layout/ProsePage";
 import Magnetic from "@/components/ui/Magnetic";
+import Documentation from "@/components/products/Documentation";
 import { catalog } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 
 export default function CatalogPage() {
   return (
+    <>
     <ProsePage kicker="Κατάλογος" title={catalog.title}>
       <p className="mt-verse max-w-[52ch] text-[0.95rem] leading-relaxed text-ink/80">
         Ο πλήρης έντυπος κατάλογος της Uplab σε ψηφιακή μορφή — όλα τα προϊόντα, οι συσκευασίες και οι
@@ -22,8 +24,7 @@ export default function CatalogPage() {
             href={catalog.pdf}
             target="_blank"
             rel="noopener noreferrer"
-            className="cta-sheen inline-block rounded-full bg-amber px-[1.6em] py-[0.7em] text-[0.88rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright"
-            style={{ fontWeight: 560 }}
+            className="btn-solid"
           >
             Λήψη καταλόγου (PDF)
           </a>
@@ -31,12 +32,14 @@ export default function CatalogPage() {
         <Magnetic strength={0.3}>
           <Link
             href="/proionta"
-            className="inline-block rounded-full border border-ink/20 px-[1.6em] py-[0.7em] text-[0.88rem] text-ink transition-colors duration-300 hover:bg-ink hover:text-porcelain"
+            className="inline-block rounded-[3px] border border-ink/25 px-[1.6em] py-[0.7em] text-[0.88rem] text-ink transition-colors duration-300 hover:bg-ink hover:text-porcelain"
           >
             Περιήγηση online
           </Link>
         </Magnetic>
       </div>
     </ProsePage>
+    <Documentation />
+    </>
   );
 }

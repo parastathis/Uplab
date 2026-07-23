@@ -89,7 +89,7 @@ export default async function EnProductPage({ params }: { params: Promise<{ slug
             Available exclusively <span className="text-ink">through pharmacies</span>
           </p>
           <Magnetic strength={0.4}>
-            <Link href="/simeia-polisis" className="cta-sheen inline-block shrink-0 rounded-full bg-amber px-[1.5em] py-[0.65em] text-[0.85rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright" style={{ fontWeight: 560 }}>
+            <Link href="/simeia-polisis" className="btn-solid shrink-0">
               Where to find it
             </Link>
           </Magnetic>

@@ -4,6 +4,7 @@ import { trust } from "@/lib/data";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
 import Magnetic from "@/components/ui/Magnetic";
+import PingPongVideo from "@/components/ui/PingPongVideo";
 
 export const metadata: Metadata = {
   title: "Συνεργασία B2B",
@@ -22,15 +23,10 @@ export default function B2BPage() {
   return (
     <div className="bg-ink pt-[calc(var(--nav-h)+2rem)] text-porcelain">
       <div className="relative overflow-hidden">
-        <video
+        <PingPongVideo
           className="absolute inset-0 h-full w-full object-cover opacity-30"
           src="/media/pharmacy.mp4"
           poster="/media/pharmacy-still.png"
-          muted
-          loop
-          playsInline
-          autoPlay
-          aria-hidden
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" aria-hidden />
         <div className="relative z-10 mx-auto max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)] py-act">
@@ -61,6 +57,31 @@ export default function B2BPage() {
         ))}
       </Stagger>
 
+      {/* value band — real production imagery + a ping-pong clip */}
+      <div className="mx-auto max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)] pb-chapter">
+        <Reveal>
+          <p className="caption-tag !text-porcelain/60">Γιατί Uplab</p>
+        </Reveal>
+        <Reveal delay={0.06}>
+          <h2 className="display-md mt-hair max-w-[22ch]">Παραγωγή, ποιότητα και διακίνηση, κάτω από μία στέγη.</h2>
+        </Reveal>
+        <Stagger className="mt-chapter grid grid-cols-1 gap-line sm:grid-cols-3" gap={0.1}>
+          <StaggerItem className="overflow-hidden rounded-[8px] border border-porcelain/12">
+            <div className="relative aspect-[3/4]">
+              <PingPongVideo src="/media/hero-orbit.mp4" poster="/media/hero-still.png" className="absolute inset-0 h-full w-full object-cover" />
+            </div>
+          </StaggerItem>
+          <StaggerItem className="overflow-hidden rounded-[8px] border border-porcelain/12">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/media/gallery/gen-production.png" alt="Γραμμή παραγωγής GMP" loading="lazy" className="aspect-[3/4] w-full object-cover" />
+          </StaggerItem>
+          <StaggerItem className="overflow-hidden rounded-[8px] border border-porcelain/12">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/media/gallery/gen-quality.png" alt="Διασφάλιση ποιότητας" loading="lazy" className="aspect-[3/4] w-full object-cover" />
+          </StaggerItem>
+        </Stagger>
+      </div>
+
       <div className="mx-auto max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)] pb-act">
         <Reveal className="flex flex-wrap items-center justify-between gap-line border-t border-porcelain/12 pt-chapter">
           <div>
@@ -74,8 +95,7 @@ export default function B2BPage() {
             <Magnetic strength={0.4}>
               <a
                 href="mailto:info@uplab.gr?subject=%CE%A3%CF%85%CE%BD%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1%20B2B"
-                className="cta-sheen inline-block rounded-full bg-amber px-[1.5em] py-[0.7em] text-[0.85rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright"
-                style={{ fontWeight: 560 }}
+                className="btn-solid"
               >
                 Ζητήστε τον κατάλογο
               </a>
@@ -83,7 +103,7 @@ export default function B2BPage() {
             <Magnetic strength={0.3}>
               <Link
                 href="/epikoinonia"
-                className="inline-block rounded-full border border-porcelain/30 px-[1.5em] py-[0.7em] text-[0.85rem] text-porcelain transition-colors duration-300 hover:bg-porcelain hover:text-ink"
+                className="inline-block rounded-[3px] border border-porcelain/30 px-[1.5em] py-[0.7em] text-[0.85rem] text-porcelain transition-colors duration-300 hover:bg-porcelain hover:text-ink"
               >
                 Επικοινωνία
               </Link>

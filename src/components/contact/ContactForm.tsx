@@ -64,7 +64,7 @@ export default function ContactForm() {
       <Magnetic strength={0.4}>
         <button
           type="submit"
-          className="cta-sheen mt-stanza rounded-full bg-amber px-[1.6em] py-[0.7em] text-[0.85rem] text-ink-black transition-colors duration-300 hover:bg-amber-bright"
+          className="btn-solid mt-stanza"
           style={{ fontWeight: 560 }}
         >
           Αποστολή μέσω email

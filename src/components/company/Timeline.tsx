@@ -92,7 +92,7 @@ export default function Timeline() {
                     viewport={{ once: true, margin: "-12% 0px -12% 0px" }}
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <h3 className="font-display text-[1.5rem] leading-tight text-ink">{e.title}</h3>
+                    <h3 className="subhead text-[1.5rem] text-ink">{e.title}</h3>
                     <p className="mt-breath text-[1rem] leading-[1.8] text-ink/75">{e.body}</p>
                   </motion.div>
                 </div>

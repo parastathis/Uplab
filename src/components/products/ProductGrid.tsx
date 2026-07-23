@@ -13,14 +13,19 @@ export default function ProductGrid({
   products,
   filterKey,
   hrefBase = "/proionta",
+  variant = "full",
 }: {
   products: Product[];
   filterKey: string;
   hrefBase?: string;
+  /** "full" = own max-width + padding; "panel" = fills a parent column (sidebar layout) */
+  variant?: "full" | "panel";
 }) {
+  const panel = variant === "panel";
+
   if (products.length === 0) {
     return (
-      <p className="mx-auto mt-chapter max-w-7xl px-[clamp(1.2rem,4vw,4.5rem)] pb-act text-mist">
+      <p className={panel ? "text-mist" : "mx-auto mt-chapter max-w-7xl px-[clamp(1.2rem,4vw,4.5rem)] pb-act text-mist"}>
         Δεν βρέθηκαν προϊόντα σε αυτόν τον συνδυασμό φίλτρων.
       </p>
     );
@@ -31,7 +36,11 @@ export default function ProductGrid({
       key={filterKey}
       as="ul"
       gap={0.04}
-      className="mx-auto mt-chapter grid max-w-7xl grid-cols-2 gap-x-line gap-y-verse px-[clamp(1.2rem,4vw,4.5rem)] pb-act md:grid-cols-3 xl:grid-cols-4"
+      className={
+        panel
+          ? "grid grid-cols-2 gap-x-line gap-y-verse sm:grid-cols-2 lg:grid-cols-3"
+          : "mx-auto mt-chapter grid max-w-7xl grid-cols-2 gap-x-line gap-y-verse px-[clamp(1.2rem,4vw,4.5rem)] pb-act md:grid-cols-3 xl:grid-cols-4"
+      }
     >
       {products.map((p) => (
         <li key={p.id} className="h-full">
@@ -53,7 +62,7 @@ export default function ProductGrid({
             </div>
             {/* fixed-height text block — copy never changes the card size */}
             <div className="flex min-h-[4.6rem] flex-col gap-[0.3rem] pt-breath">
-              <h3 className="line-clamp-2 font-display text-[1rem] leading-snug text-ink transition-colors duration-300 group-hover:text-slate">
+              <h3 className="subhead line-clamp-2 text-[1rem] leading-snug text-ink transition-colors duration-300 group-hover:text-slate">
                 {p.name}
               </h3>
               <p className="line-clamp-1 text-[0.75rem] text-mist">{p.categories.join(" · ")}</p>
