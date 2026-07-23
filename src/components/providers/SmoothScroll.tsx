@@ -11,6 +11,11 @@ gsap.registerPlugin(ScrollTrigger);
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Mobile / touch → plain native scroll (Lenis on touch is laggy and breaks
+    // the full-screen menu's scroll lock). Smooth scroll stays on desktop only.
+    const isTouch =
+      window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 1024;
+    if (isTouch) return;
 
     const lenis = new Lenis({
       duration: 1.15,

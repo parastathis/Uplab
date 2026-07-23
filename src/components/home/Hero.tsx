@@ -33,20 +33,45 @@ export default function Hero() {
     if (!ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Mobile/touch: keep the static poster (no 145-frame preload, no canvas
+    // scrub, no scroll-pin). This removes the heavy on-load work + scroll jank;
+    // the text + CTAs stay visible because the reveal timeline never runs.
+    const isMobile =
+      window.innerWidth < 1024 || window.matchMedia("(pointer: coarse)").matches;
+    if (isMobile) return;
 
-    // ── preload frames ──
-    const images: HTMLImageElement[] = [];
+    // ── preload frames (desktop only) — first batch eager, rest progressive ──
+    const images: HTMLImageElement[] = new Array(FRAME_COUNT);
     let loaded = 0;
-    for (let i = 1; i <= FRAME_COUNT; i++) {
-      const img = new Image();
-      img.src = framePath(i);
-      img.onload = () => {
-        loaded++;
-        if (loaded === 1) drawCover(0); // first paint asap
-        if (loaded >= 8) setReady(true);
-      };
-      images.push(img);
-    }
+    const onFrame = () => {
+      loaded++;
+      if (loaded === 1) drawCover(0); // first paint asap
+      if (loaded >= 8) setReady(true);
+    };
+    const loadFrame = (i: number) =>
+      new Promise<void>((res) => {
+        const img = new Image();
+        img.src = framePath(i + 1);
+        images[i] = img;
+        img.onload = () => {
+          onFrame();
+          res();
+        };
+        img.onerror = () => {
+          onFrame();
+          res();
+        };
+      });
+    (async () => {
+      // eager first 16 for a quick, scrubbable start…
+      await Promise.all(Array.from({ length: 16 }, (_, i) => loadFrame(i)));
+      // …then stream the rest in small batches so we never fire 145 at once
+      for (let i = 16; i < FRAME_COUNT; i += 8) {
+        await Promise.all(
+          Array.from({ length: Math.min(8, FRAME_COUNT - i) }, (_, k) => loadFrame(i + k))
+        );
+      }
+    })();
 
     // ── canvas sizing (DPR-aware, cover fit) ──
     let cw = 0,
