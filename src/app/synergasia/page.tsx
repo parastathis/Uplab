@@ -22,14 +22,21 @@ const STATS = [
 export default function B2BPage() {
   return (
     <div className="bg-ink pt-[calc(var(--nav-h)+2rem)] text-porcelain">
-      <div className="relative overflow-hidden">
-        <PingPongVideo
-          className="absolute inset-0 h-full w-full object-cover opacity-30"
+      <div className="relative flex min-h-[88vh] items-end overflow-hidden">
+        {/* full-bleed background video — smooth continuous loop */}
+        <video
+          className="absolute inset-0 h-full w-full object-cover opacity-45"
           src="/media/pharmacy.mp4"
           poster="/media/pharmacy-still.png"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" aria-hidden />
-        <div className="relative z-10 mx-auto max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)] py-act">
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" aria-hidden />
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-[clamp(1.2rem,4vw,4.5rem)] pb-chapter pt-act">
           <Reveal>
             <p className="caption-tag !text-porcelain/60">Για φαρμακεία & φαρμακαποθήκες</p>
           </Reveal>

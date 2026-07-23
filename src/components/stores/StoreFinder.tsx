@@ -25,7 +25,7 @@ const AMBER = "#c9803e";
 
 /**
  * Store finder — Leaflet/OpenStreetMap map + searchable list of Uplab's
- * pharmacy network (~690 real σημεία scraped from the live locator). Searching
+ * pharmacy network (~860 real σημεία scraped from the live locator). Searching
  * filters the list and the map markers together and re-fits the map bounds.
  */
 export default function StoreFinder() {
@@ -50,18 +50,29 @@ export default function StoreFinder() {
       const L = (await import("leaflet")).default;
       if (cancelled || !mapEl.current || mapRef.current) return;
       Lref.current = L;
-      map = L.map(mapEl.current, { preferCanvas: true, scrollWheelZoom: false }).setView([38.7, 24.2], 6);
+      const m = L.map(mapEl.current, { preferCanvas: true, scrollWheelZoom: false }).setView([38.7, 24.2], 6);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap",
         maxZoom: 18,
-      }).addTo(map);
-      layerRef.current = L.layerGroup().addTo(map);
-      mapRef.current = map;
+      }).addTo(m);
+      layerRef.current = L.layerGroup().addTo(m);
+      mapRef.current = m;
+      map = m;
       setReady(true);
+      // recompute size once laid out (fixes blank tiles inside animated/flex parents)
+      setTimeout(() => m.invalidateSize(), 250);
+      if (mapEl.current && "ResizeObserver" in window) {
+        const ro = new ResizeObserver(() => m.invalidateSize());
+        ro.observe(mapEl.current);
+        (m as unknown as { _ro?: ResizeObserver })._ro = ro;
+      }
     })();
     return () => {
       cancelled = true;
-      map?.remove();
+      if (map) {
+        (map as unknown as { _ro?: ResizeObserver })._ro?.disconnect();
+        map.remove();
+      }
       mapRef.current = null;
     };
   }, []);

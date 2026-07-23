@@ -68,9 +68,9 @@ export default function StoresPage() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.05} className="mt-act">
+        <div className="mt-act">
           <StoreFinder />
-        </Reveal>
+        </div>
       </div>
     </div>
   );

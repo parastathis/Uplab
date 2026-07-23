@@ -1,39 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { eofCategories, families, healthCategories, products } from "@/lib/data";
 import PageHeader from "@/components/ui/PageHeader";
 import ProductGrid from "@/components/products/ProductGrid";
+import ProductFilters from "@/components/products/ProductFilters";
 import AnimatedNumber from "@/components/ui/AnimatedNumber";
-
-/** One filter row in the sidebar rail. */
-function FilterLink({
-  href,
-  label,
-  count,
-  active,
-}: {
-  href: string;
-  label: string;
-  count?: number;
-  active: boolean;
-}) {
-  return (
-    <li>
-      <Link
-        href={href}
-        aria-current={active ? "true" : undefined}
-        className={`group flex items-baseline justify-between gap-2 border-l-2 py-[0.28rem] pl-line text-[0.9rem] transition-colors duration-300 ${
-          active ? "border-amber text-ink" : "border-transparent text-mist hover:border-ink/20 hover:text-ink"
-        }`}
-      >
-        <span>{label}</span>
-        {typeof count === "number" && (
-          <span className="font-display text-[0.78rem] italic text-mist">{count}</span>
-        )}
-      </Link>
-    </li>
-  );
-}
 
 export const metadata: Metadata = {
   title: "Προϊόντα",
@@ -83,54 +53,15 @@ export default async function ProductsPage({
           <ProductGrid products={shown} filterKey={filterKey} variant="panel" />
         </div>
 
-        {/* filter rail — right, sticky */}
+        {/* filter rail — right on desktop, collapsible on mobile */}
         <aside
           className="order-1 lg:order-2 lg:sticky lg:top-[calc(var(--nav-h)+1.5rem)] lg:h-max lg:self-start"
-          aria-label="Φίλτρα προϊόντων"
         >
-          <nav>
-            <p className="caption-tag">Ανά ανάγκη υγείας</p>
-            <ul className="mt-breath space-y-[0.1rem]">
-              <FilterLink href="/proionta" label="Όλα τα προϊόντα" active={!activeCat && !activeEof && !activeFam} />
-              {healthCategories
-                .filter((c) => c.count > 0)
-                .map((c) => (
-                  <FilterLink
-                    key={c.slug}
-                    href={`/proionta?katigoria=${encodeURIComponent(c.slug)}`}
-                    label={c.name}
-                    count={c.count}
-                    active={activeCat?.slug === c.slug}
-                  />
-                ))}
-            </ul>
-
-            <p className="caption-tag mt-stanza !text-sage-ink">Κατηγορία ΕΟΦ</p>
-            <ul className="mt-breath space-y-[0.1rem]">
-              {eofCategories.map((c) => (
-                <FilterLink
-                  key={c.slug}
-                  href={`/proionta?eof=${encodeURIComponent(c.slug)}`}
-                  label={c.name}
-                  count={c.count}
-                  active={activeEof?.slug === c.slug}
-                />
-              ))}
-            </ul>
-
-            <p className="caption-tag mt-stanza">Σειρές</p>
-            <ul className="mt-breath space-y-[0.1rem]">
-              {families.map((f) => (
-                <FilterLink
-                  key={f.slug}
-                  href={`/proionta?seira=${f.slug}`}
-                  label={f.name}
-                  count={f.count}
-                  active={activeFam?.slug === f.slug}
-                />
-              ))}
-            </ul>
-          </nav>
+          <ProductFilters
+            activeCat={activeCat?.slug}
+            activeEof={activeEof?.slug}
+            activeFam={activeFam?.slug}
+          />
         </aside>
       </div>
     </div>

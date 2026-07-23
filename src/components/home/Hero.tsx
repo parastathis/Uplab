@@ -187,14 +187,16 @@ export default function Hero() {
           >
             {VISION}
           </p>
-          <Link
-            data-hero-copy
-            href="/simeia-polisis"
-            className="btn-line group text-porcelain"
-          >
-            <span>Βρείτε φαρμακείο</span>
-            <span className="btn-line__arrow" aria-hidden>→</span>
-          </Link>
+          <div data-hero-copy className="flex flex-wrap items-center gap-x-verse gap-y-line">
+            <Link href="/proionta" className="btn-solid group">
+              <span>Τα προϊόντα μας</span>
+              <span className="btn-arrow" aria-hidden>→</span>
+            </Link>
+            <Link href="/simeia-polisis" className="btn-line group text-porcelain">
+              <span>Βρείτε φαρμακείο</span>
+              <span className="btn-line__arrow" aria-hidden>→</span>
+            </Link>
+          </div>
         </div>
       </div>
 

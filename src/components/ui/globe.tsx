@@ -17,13 +17,13 @@ const GLOBE_CONFIG: GlobeConfig = {
   devicePixelRatio: 2,
   phi: 0,
   theta: 0.3,
-  dark: 0,
-  diffuse: 0.4,
+  dark: 1,
+  diffuse: 1.2,
   mapSamples: 16000,
-  mapBrightness: 1.2,
-  baseColor: [1, 1, 1],
+  mapBrightness: 6,
+  baseColor: [0.55, 0.67, 0.82], // continents on a dark ocean → clearly Earth
   markerColor: [231 / 255, 164 / 255, 92 / 255], // Uplab amber
-  glowColor: [1, 1, 1],
+  glowColor: [0.32, 0.45, 0.64], // cool atmospheric rim
   markers: [
     { location: [37.9838, 23.7275], size: 0.1 }, // Athens (HQ)
     { location: [45.815, 15.9819], size: 0.06 }, // Zagreb

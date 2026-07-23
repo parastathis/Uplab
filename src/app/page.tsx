@@ -7,7 +7,6 @@ import BodyMap from "@/components/home/BodyMap";
 import NewProducts from "@/components/home/NewProducts";
 import Triptych from "@/components/home/Triptych";
 import GalleryAccordion from "@/components/home/GalleryAccordion";
-import Partners from "@/components/home/Partners";
 import NewsFeature from "@/components/home/NewsFeature";
 import Finale from "@/components/home/Finale";
 
@@ -23,7 +22,6 @@ export default function HomePage() {
       <NewProducts />
       <Triptych />
       <GalleryAccordion />
-      <Partners />
       <NewsFeature />
       <Finale />
     </>
