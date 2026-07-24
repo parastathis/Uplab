@@ -126,11 +126,6 @@ export default function Hero() {
 
       if (reduced) {
         drawCover(0);
-        gsap.set(section.querySelectorAll("[data-letter],[data-hero-copy]"), {
-          opacity: 1,
-          yPercent: 0,
-          y: 0,
-        });
         return () => {
           gsap.ticker.remove(render);
           window.removeEventListener("resize", resize);
@@ -138,10 +133,9 @@ export default function Hero() {
       }
 
       // ── the scroll story — ONE pinned master timeline owns the pin. As you
-      //    scroll it: reveals the UPLAB letters, then the copy + CTAs, fades the
-      //    scroll cue, and scrubs the 145-frame orbit (onUpdate → eased render
-      //    loop). Smoothing = Lenis + scrub 0.55 + the render lerp: glass-smooth,
-      //    and everything "loads in while you scroll". ──
+      //    scroll: the UPLAB letters pop up, then the copy + CTAs, the scroll
+      //    cue fades, and the 145-frame hand-orbit scrubs (onUpdate → eased
+      //    render loop). This is the original planned behaviour. ──
       const vh = window.innerHeight || 800;
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -149,8 +143,7 @@ export default function Hero() {
           start: "top top",
           end: () => `+=${vh * 2.6}`,
           pin: true,
-          scrub: 0.55,
-          invalidateOnRefresh: true,
+          scrub: 0.8,
           onUpdate: (self) => {
             state.frame = self.progress * (FRAME_COUNT - 1);
           },
@@ -160,29 +153,23 @@ export default function Hero() {
       tl.fromTo(
         section.querySelectorAll("[data-letter]"),
         { yPercent: 120, opacity: 0 },
-        { yPercent: 0, opacity: 1, stagger: 0.06, ease: "power3.out", duration: 0.5 },
-        0.02
+        { yPercent: 0, opacity: 1, stagger: 0.05, ease: "power3.out", duration: 0.28 },
+        0
       )
         .fromTo(
           section.querySelectorAll("[data-hero-copy]"),
-          { y: 44, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.1, ease: "power2.out", duration: 0.4 },
-          0.3
+          { y: 46, opacity: 0 },
+          { y: 0, opacity: 1, stagger: 0.08, ease: "power2.out", duration: 0.22 },
+          0.22
         )
         .to(
           section.querySelector("[data-hero-scrollcue]"),
-          { opacity: 0, ease: "none", duration: 0.1 },
-          0.06
+          { opacity: 0, duration: 0.12 },
+          0.14
         )
-        .to({}, { duration: 0.6 });
-
-      // recompute pin/end once the first frames + fonts have settled so the
-      // story doesn't start from a stale measurement (was a source of jank)
-      const refresh = () => ScrollTrigger.refresh();
-      const t = window.setTimeout(refresh, 300);
+        .to({}, { duration: 0.5 });
 
       return () => {
-        window.clearTimeout(t);
         gsap.ticker.remove(render);
         window.removeEventListener("resize", resize);
       };
