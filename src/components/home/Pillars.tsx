@@ -33,39 +33,16 @@ export default function Pillars() {
   useIsomorphicLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // reduced motion → no pin; the pillars stay in a plain stacked, all-visible
+    // layout (motion-reduce: classes in the markup below).
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const panels = el.querySelectorAll<HTMLElement>("[data-pillar]");
 
-    // ── mobile: no scroll-jack. Each pillar fades + slides up smoothly the
-    //    moment it enters the viewport on native scroll ──
-    const isDesktop =
-      window.innerWidth >= 1024 && window.matchMedia("(pointer: fine)").matches;
-    if (!isDesktop) {
-      panels.forEach((p) => {
-        p.style.opacity = "0";
-        p.style.transform = "translateY(32px)";
-        p.style.transition =
-          "opacity 0.8s var(--ease-lab), transform 0.8s var(--ease-lab)";
-      });
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (!e.isIntersecting) return;
-            const t = e.target as HTMLElement;
-            t.style.opacity = "1";
-            t.style.transform = "none";
-            io.unobserve(t);
-          });
-        },
-        { threshold: 0.2, rootMargin: "0px 0px -8% 0px" }
-      );
-      panels.forEach((p) => io.observe(p));
-      return () => io.disconnect();
-    }
-
-    // ── desktop: one pinned timeline swaps the three pillars in/out ──
+    // ── the pinned "swap" scroll story runs on every device (desktop + mobile):
+    //    the three pillars stack and cross-fade as you scroll through the pin.
+    //    On mobile Lenis is off, so ScrollTrigger drives it from native scroll. ──
     const ctx = gsap.context(() => {
       const vh = window.innerHeight || document.documentElement.clientHeight || 800;
+      const panels = el.querySelectorAll("[data-pillar]");
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -93,11 +70,11 @@ export default function Pillars() {
   return (
     <section
       ref={ref}
-      className="relative bg-night py-act lg:h-[100dvh] lg:overflow-hidden lg:py-0"
+      className="relative overflow-hidden bg-night motion-safe:h-[100svh] motion-safe:lg:h-[100dvh] motion-reduce:py-act"
       aria-label="Παράγουμε, επιλέγουμε, διακινούμε"
     >
       <video
-        className="absolute inset-0 h-full w-full object-cover opacity-40 lg:opacity-55"
+        className="absolute inset-0 h-full w-full object-cover opacity-45 lg:opacity-55"
         src="/media/factory.mp4"
         poster="/media/factory-still.png"
         muted
@@ -106,15 +83,15 @@ export default function Pillars() {
         autoPlay
         aria-hidden
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-night/90 via-night/60 to-night/30 lg:via-night/45 lg:to-transparent" aria-hidden />
+      <div className="absolute inset-0 bg-gradient-to-r from-night/90 via-night/55 to-night/30 lg:via-night/45 lg:to-transparent" aria-hidden />
 
-      <div className="relative z-10 flex px-[clamp(1.2rem,4vw,4.5rem)] lg:h-full lg:items-end lg:pb-chapter">
-        <div className="relative w-full max-w-3xl lg:min-h-[42vh]">
+      <div className="relative z-10 flex px-[clamp(1.2rem,4vw,4.5rem)] motion-safe:h-full motion-safe:items-end motion-safe:pb-chapter">
+        <div className="relative w-full max-w-3xl motion-safe:min-h-[42vh]">
           {PILLARS.map((p) => (
             <article
               key={p.no}
               data-pillar
-              className="mb-verse last:mb-0 lg:absolute lg:inset-x-0 lg:bottom-0 lg:mb-0"
+              className="motion-reduce:mb-verse motion-reduce:last:mb-0 motion-safe:absolute motion-safe:inset-x-0 motion-safe:bottom-0"
             >
               <span className="caption-tag !text-porcelain/60">{p.no}</span>
               <h2 className="display-black mt-hair text-[clamp(1.5rem,6vw,5.6rem)] text-porcelain">{p.title}</h2>

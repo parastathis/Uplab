@@ -33,14 +33,12 @@ export default function Hero() {
     if (!ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Mobile/touch: keep the static poster (no 145-frame preload, no canvas
-    // scrub, no scroll-pin). This removes the heavy on-load work + scroll jank;
-    // the text + CTAs stay visible because the reveal timeline never runs.
-    const isMobile =
-      window.innerWidth < 1024 || window.matchMedia("(pointer: coarse)").matches;
-    if (isMobile) return;
+    // The scroll story runs on every device (desktop + mobile) — the hand
+    // orbits and the letters pop up as you scroll, as originally planned. Frames
+    // load progressively (eager first batch, then small batches) so mobile
+    // isn't hit with 145 decodes at once, and the pin works with native scroll.
 
-    // ── preload frames (desktop only) — first batch eager, rest progressive ──
+    // ── preload frames — first batch eager, rest progressive ──
     const images: HTMLImageElement[] = new Array(FRAME_COUNT);
     let loaded = 0;
     const onFrame = () => {
@@ -112,9 +110,18 @@ export default function Hero() {
 
     const state = { frame: 0, drawn: -1 };
 
+    // Only spend frames drawing while the hero is on-screen — keeps mobile light
+    // once you've scrolled past it (the canvas would otherwise keep blitting).
+    let visible = true;
+    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting), {
+      rootMargin: "200px 0px",
+    });
+    io.observe(section);
+
     const ctxGsap = gsap.context(() => {
       // one rAF: ease drawn frame toward target, blit only on change
       const render = () => {
+        if (!visible) return;
         state.drawn += (state.frame - state.drawn) * 0.18;
         const idx = Math.round(state.drawn);
         drawCover(idx);
@@ -175,7 +182,10 @@ export default function Hero() {
       };
     }, section);
 
-    return () => ctxGsap.revert();
+    return () => {
+      io.disconnect();
+      ctxGsap.revert();
+    };
   }, []);
 
   return (
