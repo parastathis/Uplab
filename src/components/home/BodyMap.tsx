@@ -141,12 +141,13 @@ export default function BodyMap() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const activeRef = useRef<string | null>(null);
   activeRef.current = active;
 
   /* An explicit tap/click selection. On mobile there is no hover, so we bring
      the category panel into view — "select an area → scroll down to the
-     category". Desktop hover (onPointerEnter) never scrolls. */
+     category". Desktop hover never scrolls. */
   const selectRegion = (id: string) => {
     setActive(id);
     if (typeof window !== "undefined" && window.innerWidth < 1024) {
@@ -154,6 +155,33 @@ export default function BodyMap() {
         panelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
       );
     }
+  };
+
+  /* Map a pointer event to figure user-space coords, then return the NEAREST
+     region anchor. This makes selection deterministic — whatever you press
+     over the figure picks the closest region — instead of relying on
+     overlapping invisible hit-circles that fought over the click. */
+  const regionAt = (e: { clientX: number; clientY: number }): string | null => {
+    const svg = svgRef.current;
+    if (!svg) return null;
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    const ctm = svg.getScreenCTM();
+    if (!ctm) return null;
+    const p = pt.matrixTransform(ctm.inverse());
+    let best: string | null = null;
+    let bestD = Infinity;
+    for (const r of bodyRegions) {
+      const a = ANCHORS[r.id];
+      if (!a) continue;
+      const d = (a.x - p.x) ** 2 + (a.y - p.y) ** 2;
+      if (d < bestD) {
+        bestD = d;
+        best = r.id;
+      }
+    }
+    return best;
   };
 
   useEffect(() => {
@@ -255,14 +283,45 @@ export default function BodyMap() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-chapter px-[clamp(1.2rem,4vw,4.5rem)] lg:grid-cols-[0.95fr_1.05fr]">
         {/* left: the engraved figure with its atlas index */}
         <div className="relative mx-auto w-full max-w-[19rem] select-none lg:max-w-[21rem]">
-          <canvas
-            ref={canvasRef}
-            width={VIEW_W * SCALE}
-            height={VIEW_H * SCALE}
-            className="block h-auto w-full"
-            aria-hidden
-          />
-          <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} className="absolute inset-0 h-full w-full overflow-visible">
+          {/* canvas + svg share ONE aspect-locked box so the svg overlay covers
+              only the figure — not the mobile list below. If the list shares the
+              svg's positioning parent it stretches the svg, the viewBox
+              letterboxes, and pointer→figure mapping skews (wrong region tapped). */}
+          <div className="relative">
+            <canvas
+              ref={canvasRef}
+              width={VIEW_W * SCALE}
+              height={VIEW_H * SCALE}
+              className="block h-auto w-full"
+              aria-hidden
+            />
+            <svg
+              ref={svgRef}
+              viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+              className="absolute inset-0 h-full w-full overflow-visible"
+            >
+            {/* one hit layer over the whole figure: hover previews the nearest
+                region (desktop), click/tap selects it. Deterministic — there are
+                no overlapping hit-circles to fight over the press. */}
+            <rect
+              x={22}
+              y={0}
+              width={VIEW_W - 44}
+              height={VIEW_H}
+              fill="transparent"
+              className="cursor-pointer"
+              onPointerMove={(e) => {
+                if (e.pointerType === "mouse") {
+                  const id = regionAt(e);
+                  if (id) setActive(id);
+                }
+              }}
+              onClick={(e) => {
+                const id = regionAt(e);
+                if (id) selectRegion(id);
+              }}
+            />
+
             {bodyRegions.map((r, i) => {
               const a = ANCHORS[r.id];
               if (!a) return null;
@@ -273,81 +332,88 @@ export default function BodyMap() {
               const lineEndX = a.side === "L" ? 1 : VIEW_W - 1;
               const textX = a.side === "L" ? -1.5 : VIEW_W + 1.5;
               const anchor = a.side === "L" ? "end" : "start";
+              const boxW = 44;
+              const boxX = a.side === "L" ? -boxW : VIEW_W;
               return (
                 <g
                   key={r.id}
-                  className="cursor-pointer"
-                  onPointerEnter={() => setActive(r.id)}
-                  onClick={() => selectRegion(r.id)}
                   style={{
                     opacity: inview ? 1 : 0,
                     transition: `opacity 0.6s var(--ease-lab) ${0.15 + i * 0.09}s`,
                   }}
                 >
-                  {/* elbow leader + labels — desktop only (they'd crop on mobile).
-                      Bigger, bolder callouts: the numbered "arrows the figure has". */}
+                  {/* elbow leader + anchor dot — visual only (the hit layer /
+                      label box own the pointer). Desktop only. */}
                   <polyline
                     points={`${dotX},${a.y} ${bendX},${a.y} ${bendX},${ly} ${lineEndX},${ly}`}
                     fill="none"
                     strokeWidth="0.5"
                     strokeLinejoin="round"
-                    className={`hidden lg:block transition-colors duration-300 ${on ? "stroke-amber" : "stroke-parchment"}`}
+                    className={`pointer-events-none hidden transition-colors duration-300 lg:block ${on ? "stroke-amber" : "stroke-parchment"}`}
                   />
-                  {/* anchor dot on the figure — desktop only (mobile shows a dot
-                      only for the selected region, below) */}
                   <circle
                     cx={dotX}
                     cy={a.y}
                     r={on ? 2.1 : 1.7}
                     strokeWidth="0.5"
-                    className={`hidden lg:block transition-all duration-300 ${on ? "fill-amber stroke-amber" : "fill-parchment stroke-mist"}`}
+                    className={`pointer-events-none hidden transition-all duration-300 lg:block ${on ? "fill-amber stroke-amber" : "fill-parchment stroke-mist"}`}
                   />
-                  <text
-                    x={textX}
-                    y={ly - 2.1}
-                    textAnchor={anchor}
-                    className={`hidden lg:block font-display italic transition-colors duration-300 ${on ? "fill-amber-deep" : "fill-slate"}`}
-                    fontSize="5.4"
+
+                  {/* clickable + keyboard-focusable label (the numbered "arrows"). */}
+                  <g
+                    className="hidden cursor-pointer lg:block"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={r.label}
+                    aria-pressed={on}
+                    onPointerEnter={(e) => {
+                      if (e.pointerType === "mouse") setActive(r.id);
+                    }}
+                    onFocus={() => setActive(r.id)}
+                    onClick={() => selectRegion(r.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        selectRegion(r.id);
+                      }
+                    }}
                   >
-                    {a.n}
-                  </text>
-                  <text
-                    x={textX}
-                    y={ly + 4.9}
-                    textAnchor={anchor}
-                    className={`hidden lg:block transition-colors duration-300 ${on ? "fill-ink" : "fill-ink/85"}`}
-                    fontSize="5.2"
-                    style={{ fontWeight: 700 }}
-                  >
-                    {SHORT[r.id] ?? r.label}
-                  </text>
+                    <text
+                      x={textX}
+                      y={ly - 2.1}
+                      textAnchor={anchor}
+                      className={`font-display italic transition-colors duration-300 ${on ? "fill-amber-deep" : "fill-slate"}`}
+                      fontSize="5.4"
+                    >
+                      {a.n}
+                    </text>
+                    <text
+                      x={textX}
+                      y={ly + 4.9}
+                      textAnchor={anchor}
+                      className={`transition-colors duration-300 ${on ? "fill-ink" : "fill-ink/85"}`}
+                      fontSize="5.2"
+                      style={{ fontWeight: 700 }}
+                    >
+                      {SHORT[r.id] ?? r.label}
+                    </text>
+                    {/* padded transparent box so the whole label is easy to hit */}
+                    <rect x={boxX} y={ly - 8} width={boxW} height={15} fill="transparent" />
+                  </g>
 
                   {/* mobile: a single amber marker appears only for the SELECTED
                       region — "the dots appear just when you select an area" */}
                   {on && (
-                    <g className="lg:hidden" style={{ pointerEvents: "none" }}>
+                    <g className="pointer-events-none lg:hidden">
                       <circle cx={a.x} cy={a.y} r="6.5" className="fill-amber/20" />
                       <circle cx={a.x} cy={a.y} r="3" className="fill-amber stroke-porcelain" strokeWidth="0.8" />
                     </g>
                   )}
-
-                  {/* generous invisible hit zone; focusable for keyboard users */}
-                  <circle
-                    cx={a.x}
-                    cy={a.y}
-                    r={Math.max(a.r, 10)}
-                    fill="transparent"
-                    tabIndex={0}
-                    role="button"
-                    aria-label={r.label}
-                    aria-pressed={on}
-                    onFocus={() => setActive(r.id)}
-                    className="outline-offset-4"
-                  />
                 </g>
               );
             })}
-          </svg>
+            </svg>
+          </div>
 
           {/* mobile: tappable region list (the atlas labels are desktop-only).
               Tapping selects the area → its dot lights up + we scroll to the

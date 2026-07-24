@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { partners } from "@/lib/data";
@@ -29,6 +29,33 @@ const PILLARS = [
 /** Pinned chapter: the factory clip runs behind while the three pillars swap. */
 export default function Pillars() {
   const ref = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Keep the factory clip actually playing in the background — some phones block
+  // muted autoplay (low-power/data-saver), so nudge play() on load + when the
+  // tab becomes visible again. It stays muted, so this never needs a gesture.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const play = () => v.play().catch(() => {});
+    play();
+    v.addEventListener("loadeddata", play);
+    const onVis = () => {
+      if (!document.hidden) play();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    // (re)start when the section scrolls into view — some browsers won't kick
+    // off an off-screen autoplay, so the clip would sit on its poster otherwise.
+    const io = new IntersectionObserver(([e]) => e.isIntersecting && play(), {
+      threshold: 0.05,
+    });
+    io.observe(v);
+    return () => {
+      v.removeEventListener("loadeddata", play);
+      document.removeEventListener("visibilitychange", onVis);
+      io.disconnect();
+    };
+  }, []);
 
   useIsomorphicLayoutEffect(() => {
     const el = ref.current;
@@ -74,6 +101,7 @@ export default function Pillars() {
       aria-label="Παράγουμε, επιλέγουμε, διακινούμε"
     >
       <video
+        ref={videoRef}
         className="absolute inset-0 h-full w-full object-cover opacity-45 lg:opacity-55"
         src="/media/factory.mp4"
         poster="/media/factory-still.png"
@@ -81,6 +109,7 @@ export default function Pillars() {
         loop
         playsInline
         autoPlay
+        preload="auto"
         aria-hidden
       />
       <div className="absolute inset-0 bg-gradient-to-r from-night/90 via-night/55 to-night/30 lg:via-night/45 lg:to-transparent" aria-hidden />
