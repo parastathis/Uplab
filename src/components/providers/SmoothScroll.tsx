@@ -30,7 +30,12 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
+    // Lenis mounts after the pinned sections register their triggers — refresh
+    // so pin start/end are measured against the smooth scroller, not stale.
+    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
+
     return () => {
+      cancelAnimationFrame(raf);
       gsap.ticker.remove(tick);
       lenis.destroy();
       setLenis(null);

@@ -63,6 +63,14 @@ export default function NavHeader() {
           </Link>
 
           <nav aria-label="Κύρια πλοήγηση" className="hidden items-center gap-[clamp(1.4rem,2.4vw,2.4rem)] lg:flex">
+            <Link
+              href="/"
+              onMouseEnter={() => setMega(false)}
+              aria-current={pathname === "/" ? "page" : undefined}
+              className={`nav-link ${pathname === "/" ? "is-active" : ""}`}
+            >
+              Αρχική
+            </Link>
             <button
               type="button"
               onMouseEnter={() => setMega(true)}

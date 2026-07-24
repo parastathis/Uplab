@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -9,7 +10,7 @@ import { getLenis } from "@/lib/lenis";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// Same order as the desktop nav (Προϊόντα is rendered first, expandable).
+// Same order as the desktop nav (Αρχική + Προϊόντα render first; these follow).
 const LINKS = [
   { label: "Η εταιρεία", href: "/etaireia" },
   { label: "Νέα", href: "/nea" },
@@ -24,8 +25,14 @@ const health = healthCategories.filter((c) => c.count > 0);
 export default function MobileMenu({ light = false }: { light?: boolean }) {
   const [open, setOpen] = useState(false);
   const [prods, setProds] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const reduce = useReducedMotion();
+
+  // The overlay is rendered through a portal to <body> so it escapes the fixed
+  // header's z-50 stacking context — otherwise sections/videos/maps could paint
+  // over it and the menu would "open" but show nothing.
+  useEffect(() => setMounted(true), []);
 
   const lock = () => {
     const l = getLenis();
@@ -53,46 +60,46 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  return (
-    <div className="lg:hidden">
-      <button
-        onClick={() => (open ? closeMenu() : openMenu())}
-        aria-expanded={open}
-        aria-label={open ? "Κλείσιμο μενού" : "Άνοιγμα μενού"}
-        className={`relative z-[70] flex items-center gap-2 rounded-[3px] border px-4 py-2 text-[0.72rem] uppercase tracking-[0.14em] backdrop-blur-xl transition-colors ${
-          open || light ? "border-porcelain/30 text-porcelain" : "border-ink/15 bg-porcelain/60 text-ink"
-        }`}
-      >
-        <span className="relative flex h-[10px] w-4 flex-col justify-between">
-          <motion.span
-            className={`block h-[1.5px] w-full ${open || light ? "bg-porcelain" : "bg-ink"}`}
-            animate={open ? { rotate: 45, y: 4.2 } : { rotate: 0, y: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-          />
-          <motion.span
-            className={`block h-[1.5px] w-full ${open || light ? "bg-porcelain" : "bg-ink"}`}
-            animate={open ? { rotate: -45, y: -4.2 } : { rotate: 0, y: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-          />
-        </span>
-        Μενού
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-[60] flex flex-col overflow-y-auto overscroll-contain bg-night text-porcelain"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            transition={{ duration: 0.32, ease: EASE }}
+  const overlay = (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="fixed inset-0 z-[90] flex flex-col overflow-y-auto overscroll-contain bg-night text-porcelain lg:hidden"
+          initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
+          transition={{ duration: 0.32, ease: EASE }}
+        >
+          {/* in-overlay close (the header button sits behind the portal) */}
+          <button
+            onClick={closeMenu}
+            aria-label="Κλείσιμο μενού"
+            className="absolute right-[clamp(1rem,3.5vw,3.2rem)] top-[0.9rem] z-10 flex items-center gap-2 rounded-[3px] border border-porcelain/30 px-4 py-2 text-[0.72rem] uppercase tracking-[0.14em] text-porcelain"
           >
-            <nav
-              aria-label="Κύρια πλοήγηση"
-              className="flex flex-1 flex-col gap-1 px-[clamp(1.5rem,7vw,3rem)] pb-verse pt-[calc(var(--nav-h)+2rem)]"
+            <span className="relative flex h-[12px] w-[12px] items-center justify-center" aria-hidden>
+              <span className="absolute h-[1.5px] w-full rotate-45 bg-porcelain" />
+              <span className="absolute h-[1.5px] w-full -rotate-45 bg-porcelain" />
+            </span>
+            Κλείσιμο
+          </button>
+
+          <nav
+            aria-label="Κύρια πλοήγηση"
+            className="flex flex-1 flex-col gap-1 px-[clamp(1.5rem,7vw,3rem)] pb-verse pt-[calc(var(--nav-h)+2rem)]"
+          >
+            {/* Αρχική — same destination as the logo */}
+            <Link
+              href="/"
+              onClick={closeMenu}
+              className={`py-1 font-display text-[clamp(1.8rem,8vw,3rem)] leading-tight transition-colors ${
+                pathname === "/" ? "text-amber-bright" : "text-porcelain hover:text-amber-bright"
+              }`}
             >
-              {/* Προϊόντα — expandable */}
-              <div>
+              Αρχική
+            </Link>
+
+            {/* Προϊόντα — expandable */}
+            <div>
                 <button
                   type="button"
                   onClick={() => setProds((v) => !v)}
@@ -196,6 +203,34 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
           </motion.div>
         )}
       </AnimatePresence>
+  );
+
+  return (
+    <div className="lg:hidden">
+      <button
+        onClick={() => (open ? closeMenu() : openMenu())}
+        aria-expanded={open}
+        aria-label={open ? "Κλείσιμο μενού" : "Άνοιγμα μενού"}
+        className={`relative z-[70] flex items-center gap-2 rounded-[3px] border px-4 py-2 text-[0.72rem] uppercase tracking-[0.14em] backdrop-blur-xl transition-colors ${
+          open || light ? "border-porcelain/30 text-porcelain" : "border-ink/15 bg-porcelain/60 text-ink"
+        }`}
+      >
+        <span className="relative flex h-[10px] w-4 flex-col justify-between">
+          <motion.span
+            className={`block h-[1.5px] w-full ${open || light ? "bg-porcelain" : "bg-ink"}`}
+            animate={open ? { rotate: 45, y: 4.2 } : { rotate: 0, y: 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
+          />
+          <motion.span
+            className={`block h-[1.5px] w-full ${open || light ? "bg-porcelain" : "bg-ink"}`}
+            animate={open ? { rotate: -45, y: -4.2 } : { rotate: 0, y: 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
+          />
+        </span>
+        Μενού
+      </button>
+
+      {mounted && createPortal(overlay, document.body)}
     </div>
   );
 }

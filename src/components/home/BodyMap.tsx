@@ -36,7 +36,7 @@ const ANCHORS: Record<string, { x: number; y: number; r: number; side: "L" | "R"
    leader-line labels never fall on top of one another (immune/gut used to
    collide on the left). The leader then bends from the body up/down to this Y. */
 const LABEL_Y: Record<string, number> = (() => {
-  const GAP = 13;
+  const GAP = 17;
   const out: Record<string, number> = {};
   (["L", "R"] as const).forEach((side) => {
     const ids = Object.keys(ANCHORS)
@@ -140,8 +140,21 @@ export default function BodyMap() {
   const region = useMemo(() => bodyRegions.find((r) => r.id === active) ?? null, [active]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<string | null>(null);
   activeRef.current = active;
+
+  /* An explicit tap/click selection. On mobile there is no hover, so we bring
+     the category panel into view — "select an area → scroll down to the
+     category". Desktop hover (onPointerEnter) never scrolls. */
+  const selectRegion = (id: string) => {
+    setActive(id);
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      requestAnimationFrame(() =>
+        panelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })
+      );
+    }
+  };
 
   useEffect(() => {
     const cvs = canvasRef.current;
@@ -241,7 +254,7 @@ export default function BodyMap() {
     >
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-chapter px-[clamp(1.2rem,4vw,4.5rem)] lg:grid-cols-[0.95fr_1.05fr]">
         {/* left: the engraved figure with its atlas index */}
-        <div className="relative mx-auto w-full max-w-[19rem] select-none">
+        <div className="relative mx-auto w-full max-w-[19rem] select-none lg:max-w-[21rem]">
           <canvas
             ref={canvasRef}
             width={VIEW_W * SCALE}
@@ -265,46 +278,59 @@ export default function BodyMap() {
                   key={r.id}
                   className="cursor-pointer"
                   onPointerEnter={() => setActive(r.id)}
-                  onClick={() => setActive(r.id)}
+                  onClick={() => selectRegion(r.id)}
                   style={{
                     opacity: inview ? 1 : 0,
                     transition: `opacity 0.6s var(--ease-lab) ${0.15 + i * 0.09}s`,
                   }}
                 >
-                  {/* elbow leader + labels — hidden on mobile (they'd crop off-screen) */}
+                  {/* elbow leader + labels — desktop only (they'd crop on mobile).
+                      Bigger, bolder callouts: the numbered "arrows the figure has". */}
                   <polyline
                     points={`${dotX},${a.y} ${bendX},${a.y} ${bendX},${ly} ${lineEndX},${ly}`}
                     fill="none"
-                    strokeWidth="0.35"
+                    strokeWidth="0.5"
                     strokeLinejoin="round"
                     className={`hidden lg:block transition-colors duration-300 ${on ? "stroke-amber" : "stroke-parchment"}`}
                   />
+                  {/* anchor dot on the figure — desktop only (mobile shows a dot
+                      only for the selected region, below) */}
                   <circle
                     cx={dotX}
                     cy={a.y}
-                    r="1.3"
-                    strokeWidth="0.4"
-                    className={`transition-colors duration-300 ${on ? "fill-amber stroke-amber" : "fill-parchment stroke-mist"}`}
+                    r={on ? 2.1 : 1.7}
+                    strokeWidth="0.5"
+                    className={`hidden lg:block transition-all duration-300 ${on ? "fill-amber stroke-amber" : "fill-parchment stroke-mist"}`}
                   />
                   <text
                     x={textX}
-                    y={ly - 1.4}
+                    y={ly - 2.1}
                     textAnchor={anchor}
-                    className={`hidden lg:block font-display italic transition-colors duration-300 ${on ? "fill-amber-deep" : "fill-mist"}`}
-                    fontSize="3.6"
+                    className={`hidden lg:block font-display italic transition-colors duration-300 ${on ? "fill-amber-deep" : "fill-slate"}`}
+                    fontSize="5.4"
                   >
                     {a.n}
                   </text>
                   <text
                     x={textX}
-                    y={ly + 3.9}
+                    y={ly + 4.9}
                     textAnchor={anchor}
-                    className={`hidden lg:block transition-colors duration-300 ${on ? "fill-ink" : "fill-slate"}`}
-                    fontSize="3.3"
+                    className={`hidden lg:block transition-colors duration-300 ${on ? "fill-ink" : "fill-ink/85"}`}
+                    fontSize="5.2"
                     style={{ fontWeight: 700 }}
                   >
                     {SHORT[r.id] ?? r.label}
                   </text>
+
+                  {/* mobile: a single amber marker appears only for the SELECTED
+                      region — "the dots appear just when you select an area" */}
+                  {on && (
+                    <g className="lg:hidden" style={{ pointerEvents: "none" }}>
+                      <circle cx={a.x} cy={a.y} r="6.5" className="fill-amber/20" />
+                      <circle cx={a.x} cy={a.y} r="3" className="fill-amber stroke-porcelain" strokeWidth="0.8" />
+                    </g>
+                  )}
+
                   {/* generous invisible hit zone; focusable for keyboard users */}
                   <circle
                     cx={a.x}
@@ -323,21 +349,28 @@ export default function BodyMap() {
             })}
           </svg>
 
-          {/* mobile: tappable region list (the atlas labels are desktop-only) */}
-          <ul className="mt-stanza grid grid-cols-2 gap-x-line gap-y-[0.35rem] lg:hidden">
+          {/* mobile: tappable region list (the atlas labels are desktop-only).
+              Tapping selects the area → its dot lights up + we scroll to the
+              category panel. */}
+          <p className="caption-tag mt-stanza lg:hidden">Επιλέξτε περιοχή</p>
+          <ul className="mt-breath grid grid-cols-2 gap-x-line gap-y-[0.3rem] lg:hidden">
             {bodyRegions.map((r) => {
               const on = active === r.id;
               return (
                 <li key={r.id}>
                   <button
                     type="button"
-                    onClick={() => setActive(r.id)}
+                    onClick={() => selectRegion(r.id)}
                     aria-pressed={on}
-                    className={`flex w-full items-baseline gap-2 py-1 text-left text-[0.9rem] transition-colors ${
-                      on ? "text-ink" : "text-mist"
+                    className={`flex w-full items-baseline gap-2 rounded-[3px] border px-2 py-[0.55rem] text-left text-[0.9rem] transition-colors ${
+                      on
+                        ? "border-amber bg-amber/10 text-ink"
+                        : "border-parchment bg-porcelain/40 text-slate"
                     }`}
                   >
-                    <span className="font-display text-[0.78rem] italic text-mist">{ANCHORS[r.id]?.n}</span>
+                    <span className={`font-display text-[0.78rem] italic ${on ? "text-amber-deep" : "text-mist"}`}>
+                      {ANCHORS[r.id]?.n}
+                    </span>
                     {r.label}
                   </button>
                 </li>
@@ -347,7 +380,7 @@ export default function BodyMap() {
         </div>
 
         {/* right: reveal panel */}
-        <div className="flex flex-col justify-center">
+        <div ref={panelRef} className="flex scroll-mt-28 flex-col justify-center">
           <p className="caption-tag">Τι σας απασχολεί;</p>
           <h2 className="display-md mt-breath max-w-[22ch] text-ink">
             Δείξτε στο σώμα — σας δείχνουμε τα προϊόντα.

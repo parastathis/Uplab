@@ -34,12 +34,38 @@ export default function Pillars() {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    // desktop only — on mobile the pillars are a plain stacked, all-visible list
-    if (window.innerWidth < 1024 || window.matchMedia("(pointer: coarse)").matches) return;
+    const panels = el.querySelectorAll<HTMLElement>("[data-pillar]");
 
+    // ── mobile: no scroll-jack. Each pillar fades + slides up smoothly the
+    //    moment it enters the viewport on native scroll ──
+    const isDesktop =
+      window.innerWidth >= 1024 && window.matchMedia("(pointer: fine)").matches;
+    if (!isDesktop) {
+      panels.forEach((p) => {
+        p.style.opacity = "0";
+        p.style.transform = "translateY(32px)";
+        p.style.transition =
+          "opacity 0.8s var(--ease-lab), transform 0.8s var(--ease-lab)";
+      });
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const t = e.target as HTMLElement;
+            t.style.opacity = "1";
+            t.style.transform = "none";
+            io.unobserve(t);
+          });
+        },
+        { threshold: 0.2, rootMargin: "0px 0px -8% 0px" }
+      );
+      panels.forEach((p) => io.observe(p));
+      return () => io.disconnect();
+    }
+
+    // ── desktop: one pinned timeline swaps the three pillars in/out ──
     const ctx = gsap.context(() => {
       const vh = window.innerHeight || document.documentElement.clientHeight || 800;
-      const panels = el.querySelectorAll("[data-pillar]");
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -47,7 +73,8 @@ export default function Pillars() {
           start: "top top",
           end: () => `+=${vh * 2.6}`,
           pin: true,
-          scrub: true,
+          scrub: 0.6,
+          invalidateOnRefresh: true,
         },
       });
 
