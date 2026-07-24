@@ -60,20 +60,35 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  // press → the dark panel drops down like a curtain, then the links rise in one
+  // after another (staggered). Reduced motion → a plain fade.
+  const itemV = reduce
+    ? { closed: { opacity: 0 }, open: { opacity: 1 } }
+    : {
+        closed: { opacity: 0, y: 26 },
+        open: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } },
+      };
+  const listV = {
+    closed: {},
+    open: { transition: { staggerChildren: 0.06, delayChildren: 0.2 } },
+  };
+
   const overlay = (
     <AnimatePresence>
       {open && (
         <motion.div
           className="fixed inset-0 z-[90] flex flex-col overflow-y-auto overscroll-contain bg-night text-porcelain lg:hidden"
-          initial={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10 }}
-          transition={{ duration: 0.32, ease: EASE }}
+          initial={reduce ? { opacity: 0 } : { y: "-100%" }}
+          animate={reduce ? { opacity: 1 } : { y: 0 }}
+          exit={reduce ? { opacity: 0 } : { y: "-100%" }}
+          transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
         >
           {/* in-overlay close (the header button sits behind the portal) */}
-          <button
+          <motion.button
             onClick={closeMenu}
             aria-label="Κλείσιμο μενού"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: { delay: 0.25, duration: 0.4 } }}
             className="absolute right-[clamp(1rem,3.5vw,3.2rem)] top-[0.9rem] z-10 flex items-center gap-2 rounded-[3px] border border-porcelain/30 px-4 py-2 text-[0.72rem] uppercase tracking-[0.14em] text-porcelain"
           >
             <span className="relative flex h-[12px] w-[12px] items-center justify-center" aria-hidden>
@@ -81,25 +96,30 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
               <span className="absolute h-[1.5px] w-full -rotate-45 bg-porcelain" />
             </span>
             Κλείσιμο
-          </button>
+          </motion.button>
 
-          <nav
+          <motion.nav
             aria-label="Κύρια πλοήγηση"
+            variants={listV}
+            initial="closed"
+            animate="open"
             className="flex flex-1 flex-col gap-1 px-[clamp(1.5rem,7vw,3rem)] pb-verse pt-[calc(var(--nav-h)+2rem)]"
           >
             {/* Αρχική — same destination as the logo */}
-            <Link
-              href="/"
-              onClick={closeMenu}
-              className={`py-1 font-display text-[clamp(1.8rem,8vw,3rem)] leading-tight transition-colors ${
-                pathname === "/" ? "text-amber-bright" : "text-porcelain hover:text-amber-bright"
-              }`}
-            >
-              Αρχική
-            </Link>
+            <motion.div variants={itemV}>
+              <Link
+                href="/"
+                onClick={closeMenu}
+                className={`block py-1 font-display text-[clamp(1.8rem,8vw,3rem)] leading-tight transition-colors ${
+                  pathname === "/" ? "text-amber-bright" : "text-porcelain hover:text-amber-bright"
+                }`}
+              >
+                Αρχική
+              </Link>
+            </motion.div>
 
             {/* Προϊόντα — expandable */}
-            <div>
+            <motion.div variants={itemV}>
                 <button
                   type="button"
                   onClick={() => setProds((v) => !v)}
@@ -172,26 +192,31 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+              </motion.div>
 
               {LINKS.map((l) => {
                 const active = pathname === l.href;
                 return (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    onClick={closeMenu}
-                    className={`py-1 font-display text-[clamp(1.8rem,8vw,3rem)] leading-tight transition-colors ${
-                      active ? "text-amber-bright" : "text-porcelain hover:text-amber-bright"
-                    }`}
-                  >
-                    {l.label}
-                  </Link>
+                  <motion.div key={l.href} variants={itemV}>
+                    <Link
+                      href={l.href}
+                      onClick={closeMenu}
+                      className={`block py-1 font-display text-[clamp(1.8rem,8vw,3rem)] leading-tight transition-colors ${
+                        active ? "text-amber-bright" : "text-porcelain hover:text-amber-bright"
+                      }`}
+                    >
+                      {l.label}
+                    </Link>
+                  </motion.div>
                 );
               })}
-            </nav>
+            </motion.nav>
 
-            <div className="border-t border-porcelain/15 px-[clamp(1.5rem,7vw,3rem)] py-verse">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.5, ease: EASE } }}
+              className="border-t border-porcelain/15 px-[clamp(1.5rem,7vw,3rem)] py-verse"
+            >
               <a href="tel:+302102844333" className="text-[0.9rem] text-porcelain/70 hover:text-porcelain">
                 +30 210 28 44 333
               </a>
@@ -199,7 +224,7 @@ export default function MobileMenu({ light = false }: { light?: boolean }) {
               <a href="mailto:info@uplab.gr" className="text-[0.9rem] text-porcelain/70 hover:text-porcelain">
                 info@uplab.gr
               </a>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

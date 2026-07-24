@@ -4,6 +4,7 @@ import SmoothScroll from "@/components/providers/SmoothScroll";
 import NavHeader from "@/components/layout/NavHeader";
 import Footer from "@/components/layout/Footer";
 import CookieBanner from "@/components/layout/CookieBanner";
+import SiteLoader from "@/components/layout/SiteLoader";
 
 const DESCRIPTION =
   "Πίσω από το brand UPLAB βρίσκεται ένα σύγχρονο εργοστάσιο παραγωγής φαρμάκων. Προϊόντα υγείας σε 27 κατηγορίες, αποκλειστικά μέσω φαρμακείων — 2.075+ σημεία σε όλη την Ελλάδα.";
@@ -100,6 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <CookieBanner />
         </SmoothScroll>
+        <SiteLoader />
       </body>
     </html>
   );
