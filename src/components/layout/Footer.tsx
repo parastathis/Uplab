@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SpSignature } from "./SpSignature";
 
 export default function Footer() {
   return (
@@ -49,6 +50,7 @@ export default function Footer() {
           {" · "}
           <Link className="hover:text-porcelain" href="/politiki-cookies">Πολιτική cookies</Link>
         </p>
+        <SpSignature className="sp-sig--row" />
       </div>
 
       {/* ΕΣΠΑ — legal requirement, discreet fixed placement */}
